@@ -8,18 +8,12 @@
 	</head>
 	<body>
 		<div id="map"></div>
-
-
-
-
 		<script type="text/javascript" src="js/knockout-3.3.0.js"></script>
-
 		<script type="text/javascript">
-
 		var map;
 		var placesService;
 
-		
+
 
 		function initMap() {
 			var myLocation = new google.maps.LatLng(37.4434263, -122.176138);
@@ -35,8 +29,6 @@
 				types: ['store']
 			}
 
-
-
 			function callback(results, status) {
 				if(status == google.maps.places.PlacesServiceStatus.OK) {
 					for (var i = 0, x = results.length; i < x; i++) {
@@ -50,8 +42,6 @@
 
 
 		}
-
-
 
 	</script>
 	<script async defer
