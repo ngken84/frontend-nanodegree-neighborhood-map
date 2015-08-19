@@ -42,6 +42,10 @@ var MapViewModel = function() {
 		zoom: 17
 	});
 
+	self.placesService = new google.maps.places.PlacesService(map);
+	placesService.nearbySearch(request, callback);
+
+
 
 
 
