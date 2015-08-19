@@ -1,51 +1,19 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<
 		<style type="text/css">
-		html, body { height: 100%; margin: 0; padding: 0; }
-		#map { height: 100%; }
-	</style>
+			html, body { height: 100%; margin: 0; padding: 0; }
+			#map { height: 100%; }
+		</style>
 	</head>
 	<body>
 		<div id="map"></div>
-		<script type="text/javascript" src="js/knockout-3.3.0.js"></script>
-		<script type="text/javascript">
-		var map;
-		var placesService;
+		<script type="text/javascript" src="js/knockout-3.3.0.js" async></script>
+		<script type="text/javascript" src="js/app.js" async></script>
 
-
-
-		function initMap() {
-			var myLocation = new google.maps.LatLng(37.4434263, -122.176138);
-
-			map = new google.maps.Map(document.getElementById('map'), {
-				center: myLocation,
-				zoom: 17
-			});
-
-			var request = {
-				location : myLocation,
-				radius : '500',
-				types: ['store']
-			}
-
-			function callback(results, status) {
-				if(status == google.maps.places.PlacesServiceStatus.OK) {
-					for (var i = 0, x = results.length; i < x; i++) {
-						console.log(i + " : " + results[i].name);
-					}
-				}
-			}
-
-			placesService = new google.maps.places.PlacesService(map);
-			placesService.nearbySearch(request, callback);
-
-
-		}
-
-	</script>
-	<script async defer
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPQb5Rww_wcIz5VbhbpX55AARXlc_E7dU&callback=initMap&libraries=places">
-	</script>
+		<script async defer
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPQb5Rww_wcIz5VbhbpX55AARXlc_E7dU&callback=initialize&libraries=places">
+		</script>
 	</body>
 </html>
