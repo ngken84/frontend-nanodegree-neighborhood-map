@@ -25,7 +25,9 @@ function initialize() {
 
 	// placesService = new google.maps.places.PlacesService(map);
 	// placesService.nearbySearch(request, callback);
+	console.log("Hello");
 }
+
 
 var MapViewModel = function() {
 	var self = this;
@@ -42,8 +44,8 @@ var MapViewModel = function() {
 		zoom: 17
 	});
 
-	self.placesService = new google.maps.places.PlacesService(map);
-	placesService.nearbySearch(request, callback);
+	// self.placesService = new google.maps.places.PlacesService(map);
+	// self.placesService.nearbySearch(request, callback);
 
 
 
