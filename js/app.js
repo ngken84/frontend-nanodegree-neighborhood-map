@@ -9,7 +9,19 @@ function initialize() {
 var MapPlace = function(googlePlace) {
 	var self = this;
 
-	self.placeResult = googlePlace;
+	self.name = ko.observable(googlePlace.name);
+	self.address = ko.observable(googlePlace.vicinity);
+
+	var location = googlePlace.geometry.location;
+	self.longitude = ko.observable(location.G);
+	self.latitude = ko.observable(location.K);
+
+	// self.streetViewImage = ko.computed(function() {
+	// 	var location = self.placeResult.geometry.location;
+	// 	return "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + location.G + ","+location.K;
+	// });
+
+	// console.log(googlePlace.name + " " + googlePlace.address_components[i].long_name)
 
 }
 
@@ -19,6 +31,8 @@ var MapViewModel = function() {
 	self.longitude = ko.observable(37.4434263);
 	self.latitude = ko.observable(-122.176138);
 	self.placesArray = ko.observableArray([]);
+	self.currentPlace = ko.observable(null);
+	self.currentPlaceImage = ko.observable(null);
 
 
 	self.myLocation = ko.computed(function() {
@@ -45,10 +59,18 @@ var MapViewModel = function() {
 		self.placesService.nearbySearch(request, self.placeServiceCallback);
 	}
 
+	self.selectPlace = function(mapPlace) {
+		var imgURL = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + mapPlace.longitude() + ","+ mapPlace.latitude();
+		console.log(imgURL);
+		self.currentPlaceImage(imgURL);
+
+		self.currentPlace(mapPlace);
+	}
+
 	self.updatePlaces({
 		location : self.myLocation(),
 		radius : '500',
-		types : ['store']
+		types : ['restaurant']
 	});
 
 

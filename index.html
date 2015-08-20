@@ -25,8 +25,8 @@
 				</div>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-						<li><a href="#">Link</a></li>
+						<li><a href="#">Link <span class="sr-only">(current)</span></a></li>
+						<li><a href="#" data-bind="attr:{href: currentPlaceImage()}">Link</a></li>
 					</ul>
 					<form class="navbar-form navbar-left" role="search">
 						<div class="form-group">
@@ -41,16 +41,16 @@
 
 		<div class="container-fluid" style="position: fixed; top: 55px; bottom: 0px; width: 100%;">
 			<div class="row" style="">
-				<div class="col-md-9 col-sm-8" style="position:absolute; top: 0; bottom:0; padding: 0;">
+				<div class="col-md-9 col-sm-8" style="position:absolute; top: 2px; bottom:0; padding: 0; ">
 					<div id="map"></div>
 				</div>
-				<div class="col-md-offset-9 col-sm-offset-8 col-md-3 col-sm-4" style="position:absolute; top: 0; bottom: 0">
+				<div class="col-md-offset-9 col-sm-offset-8 col-md-3 col-sm-4" style="position:absolute; top: 2px; bottom: 0; overflow-y: scroll;">
 					<ul data-bind="foreach: placesArray" class="list-unstyled">
-						<li>
+						<li data-toggle="modal" data-target="#myModal" data-bind="click: $root.selectPlace">
 							<div class="panel panel-default">
-								<div class="panel-heading" data-bind="text: placeResult.name"></div>
-								<div class="panel-body">
-									Hello
+								<div class="panel-heading" data-bind="text: name"></div>
+								<div class="panel-body" data-bind="text: address">
+									
 								</div>
 							</div>
 						</li>
@@ -59,6 +59,25 @@
 			</div>
 
 		</div>
+
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						
+					</div>
+					<div class="modal-body">
+						<img data-bind="attr: {src: currentPlaceImage()}">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js" async></script>
 		<script type="text/javascript" src="js/knockout-3.3.0.js" async></script>
