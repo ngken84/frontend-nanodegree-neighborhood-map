@@ -3,18 +3,20 @@ function initialize() {
 
 	ko.applyBindings(new MapViewModel());
 
-}
+};
 
 
 var MapPlace = function(googlePlace) {
 	var self = this;
 
-	self.name = ko.observable(googlePlace.name);
-	self.address = ko.observable(googlePlace.vicinity);
+	self.name = googlePlace.name;
+	self.address = googlePlace.vicinity;
 
 	var location = googlePlace.geometry.location;
-	self.longitude = ko.observable(location.G);
-	self.latitude = ko.observable(location.K);
+	self.longitude = location.G;
+	self.latitude = location.K;
+
+	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.longitude + ","+ self.latitude;
 
 	// self.streetViewImage = ko.computed(function() {
 	// 	var location = self.placeResult.geometry.location;
@@ -23,20 +25,17 @@ var MapPlace = function(googlePlace) {
 
 	// console.log(googlePlace.name + " " + googlePlace.address_components[i].long_name)
 
-}
+};
 
 var MapViewModel = function() {
 	var self = this;
 
-	self.longitude = ko.observable(37.4434263);
-	self.latitude = ko.observable(-122.176138);
 	self.placesArray = ko.observableArray([]);
 	self.currentPlace = ko.observable(null);
-	self.currentPlaceImage = ko.observable(null);
 
 
 	self.myLocation = ko.computed(function() {
-		return new google.maps.LatLng(self.longitude(), self.latitude());
+		return new google.maps.LatLng(37.4434263, -122.176138);
 	});
 
 	self.map = new google.maps.Map(document.getElementById('map'), {
@@ -60,10 +59,6 @@ var MapViewModel = function() {
 	}
 
 	self.selectPlace = function(mapPlace) {
-		var imgURL = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + mapPlace.longitude() + ","+ mapPlace.latitude();
-		console.log(imgURL);
-		self.currentPlaceImage(imgURL);
-
 		self.currentPlace(mapPlace);
 	}
 
@@ -80,4 +75,4 @@ var MapViewModel = function() {
 
 
 
-}
+};

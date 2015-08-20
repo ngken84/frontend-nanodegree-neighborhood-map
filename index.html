@@ -26,7 +26,7 @@
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li><a href="#">Link <span class="sr-only">(current)</span></a></li>
-						<li><a href="#" data-bind="attr:{href: currentPlaceImage()}">Link</a></li>
+						<li><a href="#">Link</a></li>
 					</ul>
 					<form class="navbar-form navbar-left" role="search">
 						<div class="form-group">
@@ -61,14 +61,14 @@
 		</div>
 
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			<div class="modal-dialog" role="document">
+			<div class="modal-dialog" role="document" data-bind="visible: currentPlace(), with: currentPlace()">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						
+						<h4 class="modal-title" id="myModalLabel" data-bind="text: name">Modal title</h4>
 					</div>
 					<div class="modal-body">
-						<img data-bind="attr: {src: currentPlaceImage()}">
+						<img data-bind="attr: {src: imageUrl}">
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
