@@ -48,8 +48,8 @@
 					<ul data-bind="foreach: placesArray" class="list-unstyled">
 						<li data-toggle="modal" data-target="#myModal" data-bind="click: $root.selectPlace">
 							<div class="panel panel-default">
-								<div class="panel-heading" data-bind="text: name"></div>
-								<div class="panel-body" data-bind="text: address">
+								<div class="panel-heading" data-bind="text: placeResult.name"></div>
+								<div class="panel-body" data-bind="text: placeResult.vicinity">
 									
 								</div>
 							</div>
@@ -65,10 +65,24 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel" data-bind="text: name">Modal title</h4>
+						<img height="20px" width="20px" data-bind="attr: {src: placeResult.icon}">
+						<h4 class="modal-title" id="myModalLabel" data-bind="text: placeResult.name" style="display: inline">Modal title</h4>
 					</div>
 					<div class="modal-body">
 						<img data-bind="attr: {src: imageUrl}">
+						<h4>Wikipedia Information</h4>
+						<div data-bind="visible: !isWikiLoaded()">
+  							<img src="img/ajax-loader.gif">
+						</div>
+						<div data-bind="visible: isWikiFailed()">
+							<p>&nbsp;No data exists or unable to load data from Wikipedia...(Sorry!)</p>
+						</div>
+						<ul class="list-unstyled" data-bind="visible: isWikiLoaded() && !isWikiFailed(), foreach: wikiInformation">
+							<li>
+								<a data-bind="text: name, attr: {href: link}"></a>, <span data-bind="text: desc"></span>
+							</li>
+						</ul>
+
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

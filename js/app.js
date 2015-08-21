@@ -8,23 +8,43 @@ function initialize() {
 
 var MapPlace = function(googlePlace) {
 	var self = this;
+	self.placeResult = googlePlace;
+	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
 
-	self.name = googlePlace.name;
-	self.address = googlePlace.vicinity;
+	self.isWikiLoaded = ko.observable(false);
+	self.isWikiFailed = ko.observable(false);
+	self.wikiInformation = ko.observableArray([]);
 
-	var location = googlePlace.geometry.location;
-	self.longitude = location.G;
-	self.latitude = location.K;
+	self.loadWikipediaData = function() {
+		$.ajax('https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.placeResult.name + '&prop=revisions&rvprop=content&format=json&callback=wikiCallback', 
+			{
+				dataType: 'jsonp',
+				jsonp: 'callback',
+				success: function(data, textStatus, jq) {
+					if(data && data.length === 4 && data[1].length > 0) {
+						var array = [];
+						for(var i = 0, x = data[1].length; i < x; i++)
+						{
+							array.push({
+								name: data[1][i],
+								link: data[3][i],
+								desc: data[2][i]
+							});
+						}
+						console.log(array);
+						self.wikiInformation(array);
+					} else {
+						console.log(data);
+						self.isWikiFailed(true);
+					}
 
-	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.longitude + ","+ self.latitude;
-
-	// self.streetViewImage = ko.computed(function() {
-	// 	var location = self.placeResult.geometry.location;
-	// 	return "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + location.G + ","+location.K;
-	// });
-
-	// console.log(googlePlace.name + " " + googlePlace.address_components[i].long_name)
-
+				}
+			}).fail(function() {
+			self.isWikiFailed(true);
+		}).always(function() {
+			self.isWikiLoaded(true);
+		});
+	};
 };
 
 var MapViewModel = function() {
@@ -32,7 +52,6 @@ var MapViewModel = function() {
 
 	self.placesArray = ko.observableArray([]);
 	self.currentPlace = ko.observable(null);
-
 
 	self.myLocation = ko.computed(function() {
 		return new google.maps.LatLng(37.4434263, -122.176138);
@@ -60,6 +79,7 @@ var MapViewModel = function() {
 
 	self.selectPlace = function(mapPlace) {
 		self.currentPlace(mapPlace);
+		mapPlace.loadWikipediaData();
 	}
 
 	self.updatePlaces({
@@ -67,12 +87,5 @@ var MapViewModel = function() {
 		radius : '500',
 		types : ['restaurant']
 	});
-
-
-
-
-
-
-
 
 };
