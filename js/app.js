@@ -31,13 +31,10 @@ var MapPlace = function(googlePlace) {
 								desc: data[2][i]
 							});
 						}
-						console.log(array);
 						self.wikiInformation(array);
 					} else {
-						console.log(data);
 						self.isWikiFailed(true);
 					}
-
 				}
 			}).fail(function() {
 			self.isWikiFailed(true);
