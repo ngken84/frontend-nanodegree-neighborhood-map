@@ -1,8 +1,6 @@
 
 function initialize() {
-
 	ko.applyBindings(new MapViewModel());
-
 };
 
 var MapOptions = function() {
@@ -49,12 +47,10 @@ var MapOptions = function() {
 	self.getOptionsObject = function () {
 		var placeTypeArray = [];
 		for(var i = 0, x = self.placeTypePrefs.length; i < x; i++) {
-			console.log(self.placeTypePrefs[i].name + ' - ' + self.placeTypePrefs[i].isSelected());
 			if(self.placeTypePrefs[i].isSelected()) {
 				placeTypeArray.push(self.placeTypePrefs[i].typeName);
 			}
 		}
-		console.log(placeTypeArray);
 		return {
 			location: self.getLocation(),
 			radius: self.range(),
@@ -72,12 +68,11 @@ var PlaceType = function(name, type, selected) {
 	self.isSelected = ko.observable(selected);
 }
 
-
-
-var MapPlace = function(googlePlace) {
+var MapPlace = function(googlePlace, googleMap, iconLabel) {
 	var self = this;
 	self.placeResult = googlePlace;
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
+	self.labelIcon = iconLabel;
 
 	self.isWikiLoaded = ko.observable(false);
 	self.isWikiFailed = ko.observable(false);
@@ -110,7 +105,23 @@ var MapPlace = function(googlePlace) {
 			self.isWikiLoaded(true);
 		});
 	};
+
+	self.getLocation = function() {
+		var location = self.placeResult.geometry.location;
+		return new google.maps.LatLng(location.G, location.K);
+	};
+
+	var marker = new google.maps.Marker({
+		position : self.getLocation(),
+		map : googleMap,
+		label : iconLabel
+	});
+
+	globalMarkers.push(marker);
+
 };
+
+var globalMarkers = [];
 
 var MapViewModel = function() {
 	var self = this;
@@ -131,9 +142,10 @@ var MapViewModel = function() {
 
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
+			var labels = 'ABCDEFGHIJKLM';
 			self.placesArray.removeAll();
-			for(var i = 0, x = results.length; i < x; i++){
-				self.placesArray.push(new MapPlace(results[i]));
+			for(var i = 0, x = Math.min(results.length, labels.length); i < x; i++){
+				self.placesArray.push(new MapPlace(results[i], self.map, labels[i]));
 			}
 			self.isLoading(false);
 		}
@@ -141,8 +153,12 @@ var MapViewModel = function() {
 
 	self.updatePlaces = function() {
 		self.isLoading(true);
+
+		for(var i = 0, x = globalMarkers.length; i < x; i++) {
+			globalMarkers[i].setMap(null);;
+		}
+		globalMarkers = [];
 		var request = self.mapOptions.getOptionsObject();
-		console.log(request);
 		self.placesService.nearbySearch(request, self.placeServiceCallback);
 	}
 

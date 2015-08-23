@@ -51,7 +51,10 @@
 					<ul data-bind="visible: !isLoading(),foreach: placesArray" class="list-unstyled">
 						<li data-toggle="modal" data-target="#myModal" data-bind="click: $root.selectPlace">
 							<div class="panel panel-default">
-								<div class="panel-heading" data-bind="text: placeResult.name"></div>
+								<div class="panel-heading" >
+									<b><span data-bind="text: labelIcon"></span></b>
+									<span data-bind="text: placeResult.name"></span>
+								</div>
 								<div class="panel-body" data-bind="text: placeResult.vicinity">
 
 								</div>
