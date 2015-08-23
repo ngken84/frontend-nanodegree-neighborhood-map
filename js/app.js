@@ -5,6 +5,49 @@ function initialize() {
 
 };
 
+var MapOptions = function() {
+	var self = this;
+
+	self.preferences = [
+		new PlaceType('Airport', 'airport', false),
+		new PlaceType('Amusement Park', 'amusement_park', false),
+		new PlaceType('Aquarium', 'aquarium', false),
+		new PlaceType('Art Gallery', 'art_gallery', false),
+		new PlaceType('ATM', 'atm', false),
+		new PlaceType('Bank', 'bank', false),
+		new PlaceType('Bar', 'bar', true),
+		new PlaceType('Beauty Salon', 'beauty_salon', false),
+		new PlaceType('Book Store', 'book_store', false),
+		new PlaceType('Bowling Alley', 'bowling_alley', false),
+		new PlaceType('Bus Station', 'bus_station', false),
+		new PlaceType('Cafe', 'cafe', true),
+		new PlaceType('Campground', 'campground', false),
+		new PlaceType('Casino', 'casino', false),
+		new PlaceType('Convenience Store', 'convenience_store', true),
+		new PlaceType('Gas Station', 'gas_station', false),
+		new PlaceType('Grocery Store', 'grocery_or_supermarket', false),
+		new PlaceType('Gym', 'gym', false),
+		new PlaceType('Library', 'library', false),
+		new PlaceType('Movie Theatre', 'movie_theatre', true),
+		new PlaceType('Museum', 'museum', false),
+		new PlaceType('Night Club', 'night_club', false),
+		new PlaceType('Pharmacy', 'pharmacy', false),
+		new PlaceType('Restaurant', 'restaurant', true),
+		new PlaceType('Store', 'store', true),
+		new PlaceType('Zoo', 'zoo', false)
+		];
+
+		self.range = ko.observable('500');
+}
+
+var PlaceType = function(name, type, selected) {
+	var self = this;
+	self.typeName = type;
+	self.name = name;
+	self.isSelected = ko.observable(selected);
+}
+
+
 
 var MapPlace = function(googlePlace) {
 	var self = this;
@@ -16,7 +59,7 @@ var MapPlace = function(googlePlace) {
 	self.wikiInformation = ko.observableArray([]);
 
 	self.loadWikipediaData = function() {
-		$.ajax('https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.placeResult.name + '&prop=revisions&rvprop=content&format=json&callback=wikiCallback', 
+		$.ajax('https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.placeResult.name + '&prop=revisions&rvprop=content&format=json&callback=wikiCallback',
 			{
 				dataType: 'jsonp',
 				jsonp: 'callback',
@@ -53,6 +96,8 @@ var MapViewModel = function() {
 	self.myLocation = ko.computed(function() {
 		return new google.maps.LatLng(37.4434263, -122.176138);
 	});
+
+	self.options = new MapOptions();
 
 	self.map = new google.maps.Map(document.getElementById('map'), {
 		center: self.myLocation(),
