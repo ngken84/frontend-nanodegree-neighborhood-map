@@ -8,7 +8,14 @@ function initialize() {
 var MapOptions = function() {
 	var self = this;
 
-	self.preferences = [
+	self.latitude = 37.4434263;
+	self.longitude = -122.176138;
+
+	self.getLocation = function() {
+		return new google.maps.LatLng(self.latitude, self.longitude);
+	};
+
+	self.placeTypePrefs = [
 		new PlaceType('Airport', 'airport', false),
 		new PlaceType('Amusement Park', 'amusement_park', false),
 		new PlaceType('Aquarium', 'aquarium', false),
@@ -35,9 +42,27 @@ var MapOptions = function() {
 		new PlaceType('Restaurant', 'restaurant', true),
 		new PlaceType('Store', 'store', true),
 		new PlaceType('Zoo', 'zoo', false)
-		];
+	];
 
-		self.range = ko.observable('500');
+	self.range = ko.observable('500');
+
+	self.getOptionsObject = function () {
+		var placeTypeArray = [];
+		for(var i = 0, x = self.placeTypePrefs.length; i < x; i++) {
+			console.log(self.placeTypePrefs[i].name + ' - ' + self.placeTypePrefs[i].isSelected());
+			if(self.placeTypePrefs[i].isSelected()) {
+				placeTypeArray.push(self.placeTypePrefs[i].typeName);
+			}
+		}
+		console.log(placeTypeArray);
+		return {
+			location: self.getLocation(),
+			radius: self.range(),
+			types: placeTypeArray
+		}
+	}
+
+
 }
 
 var PlaceType = function(name, type, selected) {
@@ -93,14 +118,12 @@ var MapViewModel = function() {
 	self.placesArray = ko.observableArray([]);
 	self.currentPlace = ko.observable(null);
 
-	self.myLocation = ko.computed(function() {
-		return new google.maps.LatLng(37.4434263, -122.176138);
-	});
+	self.mapOptions = new MapOptions();
 
-	self.options = new MapOptions();
+	self.isLoading = ko.observable(true);
 
 	self.map = new google.maps.Map(document.getElementById('map'), {
-		center: self.myLocation(),
+		center: self.mapOptions.getLocation(),
 		zoom: 17
 	});
 
@@ -112,10 +135,14 @@ var MapViewModel = function() {
 			for(var i = 0, x = results.length; i < x; i++){
 				self.placesArray.push(new MapPlace(results[i]));
 			}
+			self.isLoading(false);
 		}
 	}
 
-	self.updatePlaces = function(request) {
+	self.updatePlaces = function() {
+		self.isLoading(true);
+		var request = self.mapOptions.getOptionsObject();
+		console.log(request);
 		self.placesService.nearbySearch(request, self.placeServiceCallback);
 	}
 
@@ -124,10 +151,6 @@ var MapViewModel = function() {
 		mapPlace.loadWikipediaData();
 	}
 
-	self.updatePlaces({
-		location : self.myLocation(),
-		radius : '500',
-		types : ['restaurant']
-	});
+	self.updatePlaces();
 
 };

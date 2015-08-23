@@ -45,7 +45,10 @@
 					<div id="map"></div>
 				</div>
 				<div class="col-md-offset-9 col-sm-offset-8 col-md-3 col-sm-4" style="position:absolute; top: 2px; bottom: 0; overflow-y: scroll;">
-					<ul data-bind="foreach: placesArray" class="list-unstyled">
+					<div data-bind="visible: isLoading()">
+						<img src="img/ajax-loader.gif">
+					</div>
+					<ul data-bind="visible: !isLoading(),foreach: placesArray" class="list-unstyled">
 						<li data-toggle="modal" data-target="#myModal" data-bind="click: $root.selectPlace">
 							<div class="panel panel-default">
 								<div class="panel-heading" data-bind="text: placeResult.name"></div>
@@ -99,12 +102,19 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h4 class="modal-title" id="optionsLabel" style="display: inline">Ken's Map Options</h4>
 					</div>
-					<div class="modal-body">
-
+					<div class="modal-body" data-bind="with: mapOptions">
+						<div style="display: block">
+							<label for="input-map-range">Range</label><input id="input-map-range" type="number" data-bind="value: range">
+						</div>
+						<ul class="list=unstyled" data-bind="foreach: placeTypePrefs">
+							<div style="display:inline-block; width: 30%">
+								<input type="checkbox" data-bind="checked: isSelected"><label data-bind="text: name"></label>
+							</div>
+						</ul>
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: $root.updatePlaces()">Update</button>
 					</div>
 				</div>
 			</div>
