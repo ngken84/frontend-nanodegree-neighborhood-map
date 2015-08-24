@@ -68,7 +68,6 @@ var PlaceType = function(name, type, selected) {
 
 var MapPlace = function(googlePlace, googleMap, iconLabel) {
 	var self = this;
-	console.log(googlePlace);
 	self.placeResult = googlePlace;
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
 	self.labelIcon = iconLabel;
@@ -110,13 +109,22 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 		return new google.maps.LatLng(location.G, location.K);
 	};
 
-	var marker = new google.maps.Marker({
-		position : self.getLocation(),
-		map : googleMap,
-		label : iconLabel
-	});
-	console.log(marker);
-	globalMarkers.push(marker);
+	self.createMarker = function(gMap) {
+		self.marker = new google.maps.Marker({
+			position : self.getLocation(),
+			map : gMap,
+			label : iconLabel
+		});
+	}
+
+	self.removeMarker = function() {
+		if(self.marker) {
+			self.marker.setMap(null);
+			self.marker = null;
+		}
+	}
+
+	self.createMarker(googleMap);
 
 	self.doesMatchFilter = function(filterText) {
 		if(filterText) {
@@ -132,11 +140,8 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 
 };
 
-var globalMarkers = [];
-
 var MapViewModel = function() {
 	var self = this;
-
 	self.placesArray = [];
 	self.placesFilteredArray = ko.observableArray([]);
 	self.currentPlace = ko.observable(null);
@@ -156,6 +161,7 @@ var MapViewModel = function() {
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
 			var labels = 'ABCDEFGHIJKLM';
+			self.resetMarkers();
 			self.placesArray = [];
 			self.placesFilteredArray.removeAll();
 			for(var i = 0, x = Math.min(results.length, labels.length); i < x; i++){
@@ -166,13 +172,15 @@ var MapViewModel = function() {
 		}
 	}
 
+	self.resetMarkers = function() {
+		for(var i = 0, x = self.placesArray.length; i < x; i++) {
+			self.placesArray[i].removeMarker();
+		}
+	}
+
 	self.updatePlaces = function() {
 		self.isLoading(true);
-
-		for(var i = 0, x = globalMarkers.length; i < x; i++) {
-			globalMarkers[i].setMap(null);;
-		}
-		globalMarkers = [];
+		self.resetMarkers();
 		var request = self.mapOptions.getOptionsObject();
 		self.placesService.nearbySearch(request, self.placeServiceCallback);
 	}
@@ -183,7 +191,16 @@ var MapViewModel = function() {
 	};
 
 	self.filterPlaces = function() {
-		console.log(self.searchTerm());
+		var filter = self.searchTerm();
+		var newArray = [];
+		self.resetMarkers();
+		for(var i = 0, x = self.placesArray.length; i < x; i++) {
+			if(self.placesArray[i] && self.placesArray[i].doesMatchFilter(filter)) {
+				newArray.push(self.placesArray[i]);
+				self.placesArray[i].createMarker(self.map);
+			} 
+		}
+		self.placesFilteredArray(newArray);
 	};
 
 	self.updatePlaces();
