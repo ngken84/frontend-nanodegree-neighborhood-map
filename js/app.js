@@ -124,7 +124,7 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 				return true;
 			}
 			var text = filterText.toUpperCase();
-			return (self.placeResult.name.toUpperCase().indexOf(text) != -1);
+			return (self.placeResult.name.toUpperCase().indexOf(text) != -1)
 				|| (self.placeResult.vicinity.toUpperCase().indexOf(text) != -1);
 		}
 		return true;
