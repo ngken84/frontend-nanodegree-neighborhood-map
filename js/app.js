@@ -66,7 +66,7 @@ var PlaceType = function(name, type, selected) {
 	self.isSelected = ko.observable(selected);
 }
 
-var MapPlace = function(googlePlace, googleMap, iconLabel) {
+var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 	var self = this;
 	self.placeResult = googlePlace;
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
@@ -77,31 +77,33 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 	self.wikiInformation = ko.observableArray([]);
 
 	self.loadWikipediaData = function() {
-		$.ajax('https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.placeResult.name + '&prop=revisions&rvprop=content&format=json&callback=wikiCallback',
-			{
-				dataType: 'jsonp',
-				jsonp: 'callback',
-				success: function(data, textStatus, jq) {
-					if(data && data.length === 4 && data[1].length > 0) {
-						var array = [];
-						for(var i = 0, x = data[1].length; i < x; i++)
-						{
-							array.push({
-								name: data[1][i],
-								link: data[3][i],
-								desc: data[2][i]
-							});
+		if(!self.isWikiLoaded()) {
+			$.ajax('https://en.wikipedia.org/w/api.php?action=opensearch&search=' + self.placeResult.name + '&prop=revisions&rvprop=content&format=json&callback=wikiCallback',
+				{
+					dataType: 'jsonp',
+					jsonp: 'callback',
+					success: function(data, textStatus, jq) {
+						if(data && data.length === 4 && data[1].length > 0) {
+							var array = [];
+							for(var i = 0, x = data[1].length; i < x; i++)
+							{
+								array.push({
+									name: data[1][i],
+									link: data[3][i],
+									desc: data[2][i]
+								});
+							}
+							self.wikiInformation(array);
+						} else {
+							self.isWikiFailed(true);
 						}
-						self.wikiInformation(array);
-					} else {
-						self.isWikiFailed(true);
 					}
-				}
-			}).fail(function() {
-			self.isWikiFailed(true);
-		}).always(function() {
-			self.isWikiLoaded(true);
-		});
+				}).fail(function() {
+				self.isWikiFailed(true);
+			}).always(function() {
+				self.isWikiLoaded(true);
+			});
+		}
 	};
 
 	self.getLocation = function() {
@@ -109,11 +111,17 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 		return new google.maps.LatLng(location.G, location.K);
 	};
 
-	self.createMarker = function(gMap) {
+	self.createMarker = function(gMap, clickFunction) {
 		self.marker = new google.maps.Marker({
 			position : self.getLocation(),
 			map : gMap,
 			label : iconLabel
+		});
+
+		self.marker.addListener('click', function() {
+			if(clickFunction) {
+				clickFunction(self);
+			}
 		});
 	}
 
@@ -124,7 +132,7 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 		}
 	}
 
-	self.createMarker(googleMap);
+	self.createMarker(googleMap, openModalFunction);
 
 	self.doesMatchFilter = function(filterText) {
 		if(filterText) {
@@ -165,7 +173,7 @@ var MapViewModel = function() {
 			self.placesArray = [];
 			self.placesFilteredArray.removeAll();
 			for(var i = 0, x = Math.min(results.length, labels.length); i < x; i++){
-				self.placesArray.push(new MapPlace(results[i], self.map, labels[i]));
+				self.placesArray.push(new MapPlace(results[i], self.map, labels[i], self.openModal));
 			}
 			self.placesFilteredArray(self.placesArray);
 			self.isLoading(false);
@@ -176,6 +184,11 @@ var MapViewModel = function() {
 		for(var i = 0, x = self.placesArray.length; i < x; i++) {
 			self.placesArray[i].removeMarker();
 		}
+	}
+
+	self.openModal = function(mapPlace) {
+		self.selectPlace(mapPlace);
+		$('#myModal').modal('show');
 	}
 
 	self.updatePlaces = function() {
