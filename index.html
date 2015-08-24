@@ -45,10 +45,18 @@
 					<div id="map"></div>
 				</div>
 				<div class="col-md-offset-9 col-sm-offset-8 col-md-3 col-sm-4" style="position:absolute; top: 2px; bottom: 0; overflow-y: scroll;">
+					<h3>Nearby Places</h3>
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" data-bind="click: filterPlaces">Go!</button>
+						</span>
+						<input type="text" class="form-control" placeholder="Search for..." data-bind="textInput: searchTerm">
+					</div>
+					<br>
 					<div data-bind="visible: isLoading()">
 						<img src="img/ajax-loader.gif">
 					</div>
-					<ul data-bind="visible: !isLoading(),foreach: placesArray" class="list-unstyled">
+					<ul data-bind="visible: !isLoading(),foreach: placesFilteredArray()" class="list-unstyled">
 						<li data-toggle="modal" data-target="#myModal" data-bind="click: $root.selectPlace">
 							<div class="panel panel-default">
 								<div class="panel-heading" >

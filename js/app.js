@@ -56,9 +56,7 @@ var MapOptions = function() {
 			radius: self.range(),
 			types: placeTypeArray
 		}
-	}
-
-
+	};
 }
 
 var PlaceType = function(name, type, selected) {
@@ -70,6 +68,7 @@ var PlaceType = function(name, type, selected) {
 
 var MapPlace = function(googlePlace, googleMap, iconLabel) {
 	var self = this;
+	console.log(googlePlace);
 	self.placeResult = googlePlace;
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
 	self.labelIcon = iconLabel;
@@ -116,8 +115,20 @@ var MapPlace = function(googlePlace, googleMap, iconLabel) {
 		map : googleMap,
 		label : iconLabel
 	});
-
+	console.log(marker);
 	globalMarkers.push(marker);
+
+	self.doesMatchFilter = function(filterText) {
+		if(filterText) {
+			if(filterText.length == 0) {
+				return true;
+			}
+			var text = filterText.toUpperCase();
+			return (self.placeResult.name.toUpperCase().indexOf(text) != -1);
+				|| (self.placeResult.vicinity.toUpperCase().indexOf(text) != -1);
+		}
+		return true;
+	};
 
 };
 
@@ -126,8 +137,10 @@ var globalMarkers = [];
 var MapViewModel = function() {
 	var self = this;
 
-	self.placesArray = ko.observableArray([]);
+	self.placesArray = [];
+	self.placesFilteredArray = ko.observableArray([]);
 	self.currentPlace = ko.observable(null);
+	self.searchTerm = ko.observable('');
 
 	self.mapOptions = new MapOptions();
 
@@ -143,10 +156,12 @@ var MapViewModel = function() {
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
 			var labels = 'ABCDEFGHIJKLM';
-			self.placesArray.removeAll();
+			self.placesArray = [];
+			self.placesFilteredArray.removeAll();
 			for(var i = 0, x = Math.min(results.length, labels.length); i < x; i++){
 				self.placesArray.push(new MapPlace(results[i], self.map, labels[i]));
 			}
+			self.placesFilteredArray(self.placesArray);
 			self.isLoading(false);
 		}
 	}
@@ -165,7 +180,11 @@ var MapViewModel = function() {
 	self.selectPlace = function(mapPlace) {
 		self.currentPlace(mapPlace);
 		mapPlace.loadWikipediaData();
-	}
+	};
+
+	self.filterPlaces = function() {
+		console.log(self.searchTerm());
+	};
 
 	self.updatePlaces();
 
