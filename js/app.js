@@ -85,7 +85,7 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 					success: function(data, textStatus, jq) {
 						if(data && data.length === 4 && data[1].length > 0) {
 							var array = [];
-							for(var i = 0, x = data[1].length; i < x; i++)
+							for(var i = 0, x = Math.min(data[1].length, 5); i < x; i++)
 							{
 								array.push({
 									name: data[1][i],
@@ -94,6 +94,9 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 								});
 							}
 							self.wikiInformation(array);
+							if(array.length === 0) {
+								self.isWikiFailed(true);
+							}
 						} else {
 							self.isWikiFailed(true);
 						}
@@ -105,6 +108,37 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 			});
 		}
 	};
+
+	self.isNYTimesLoaded = ko.observable(false);
+	self.isNYTimesFailed = ko.observable(false);
+	self.nytInformation = ko.observableArray([]);
+
+	self.loadNYTimesData = function() {
+		if(!self.isNYTimesLoaded()) {
+			var NYT_URL = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + self.placeResult.name + '&api-key=6cbb4b8bb025f0865f9afc276c97f269:8:72368218';
+			$.getJSON(NYT_URL, function(data) {
+				var articleArray = data.response.docs;
+				var array = [];
+				for(var i = 0, x = Math.min(articleArray.length,5); i < x; i++) {
+					var article = articleArray[i];
+					array.push({
+						name: article.headline.main,
+						link: article.web_url,
+						desc: article.snippet
+					});
+				}
+				self.nytInformation(array);
+				if(array.length === 0) {
+					self.isNYTimesFailed(true);
+				}
+			}).fail(function() {
+				self.isNYTimesFailed(true);
+			}).always(function() {
+				self.isNYTimesLoaded(true);
+			});
+		}
+	}
+
 
 	self.getLocation = function() {
 		var location = self.placeResult.geometry.location;
@@ -201,6 +235,7 @@ var MapViewModel = function() {
 	self.selectPlace = function(mapPlace) {
 		self.currentPlace(mapPlace);
 		mapPlace.loadWikipediaData();
+		mapPlace.loadNYTimesData();
 	};
 
 	self.filterPlaces = function() {
@@ -210,7 +245,7 @@ var MapViewModel = function() {
 		for(var i = 0, x = self.placesArray.length; i < x; i++) {
 			if(self.placesArray[i] && self.placesArray[i].doesMatchFilter(filter)) {
 				newArray.push(self.placesArray[i]);
-				self.placesArray[i].createMarker(self.map);
+				self.placesArray[i].createMarker(self.map, self.openModal);
 			} 
 		}
 		self.placesFilteredArray(newArray);

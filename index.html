@@ -84,18 +84,28 @@
 					</div>
 					<div class="modal-body">
 						<img data-bind="attr: {src: imageUrl}">
-						<h4>Wikipedia Information</h4>
-						<div data-bind="visible: !isWikiLoaded()">
-  							<img src="img/ajax-loader.gif">
+						<div data-bind="visible: !isWikiFailed()">
+							<h4>Wikipedia Information</h4>
+							<div data-bind="visible: !isWikiLoaded()">
+	  							<img src="img/ajax-loader.gif">
+							</div>
+							<ul class="list-unstyled" data-bind="visible: isWikiLoaded() && !isWikiFailed(), foreach: wikiInformation">
+								<li>
+									<a target="_blank" data-bind="text: name, attr: {href: link}"></a>, <span data-bind="text: desc"></span>
+								</li>
+							</ul>
 						</div>
-						<div data-bind="visible: isWikiFailed()">
-							<p>&nbsp;No data exists or unable to load data from Wikipedia...(Sorry!)</p>
+						<div data-bind="visible: !isNYTimesFailed()">
+							<h4>New York Times Articles</h4>
+							<div data-bind="visible: !isNYTimesLoaded()">
+	  							<img src="img/ajax-loader.gif">
+							</div>
+							<ul class="list-unstyled" data-bind="visible: isNYTimesLoaded() && !isNYTimesFailed(), foreach: nytInformation">
+								<li>
+									<a target="_blank" data-bind="text: name, attr: {href: link}"></a>, <span data-bind="text: desc"></span>
+								</li>
+							</ul>
 						</div>
-						<ul class="list-unstyled" data-bind="visible: isWikiLoaded() && !isWikiFailed(), foreach: wikiInformation">
-							<li>
-								<a target="_blank" data-bind="text: name, attr: {href: link}"></a>, <span data-bind="text: desc"></span>
-							</li>
-						</ul>
 
 					</div>
 					<div class="modal-footer">
