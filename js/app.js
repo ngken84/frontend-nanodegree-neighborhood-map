@@ -9,10 +9,6 @@ var MapOptions = function() {
 	self.latitude = 37.4434263;
 	self.longitude = -122.176138;
 
-	self.getLocation = function() {
-		return new google.maps.LatLng(self.latitude, self.longitude);
-	};
-
 	self.placeTypePrefs = [
 		new PlaceType('Airport', 'airport', false),
 		new PlaceType('Amusement Park', 'amusement_park', false),
@@ -41,8 +37,32 @@ var MapOptions = function() {
 		new PlaceType('Store', 'store', true),
 		new PlaceType('Zoo', 'zoo', false)
 	];
-
 	self.range = ko.observable('500');
+
+	self.initialize = function() {
+		var localSettings = localStorage.getItem('kenmap-mapOptions');
+		if(localSettings) {
+			localSettings = JSON.parse(localSettings);
+			self.latitude = localSettings.latitude;
+			self.longitude = localSettings.longitude;
+			var localArray = localSettings["placeTypePrefs"];
+			console.log(localArray);
+			for(var i = 0, x = Math.min(localSettings.placeTypePrefs.length, self.placeTypePrefs.length); i < x; i++) {
+				if(self.placeTypePrefs[i].typeName == localSettings.placeTypePrefs[i].typeName) {
+					self.placeTypePrefs[i].isSelected(localSettings.placeTypePrefs[i].isSelected);
+				}
+			}
+			self.range(localSettings.range);
+		}
+	}
+
+	self.initialize();
+
+	
+
+	self.getLocation = function() {
+		return new google.maps.LatLng(self.latitude, self.longitude);
+	};
 
 	self.getOptionsObject = function () {
 		var placeTypeArray = [];
@@ -57,17 +77,23 @@ var MapOptions = function() {
 			types: placeTypeArray
 		}
 	};
-}
+
+	self.updateLocalStorage = function() {
+		var stringOptions = JSON.stringify(ko.toJS(self));
+		localStorage.setItem('kenmap-mapOptions', stringOptions);
+	}
+};
 
 var PlaceType = function(name, type, selected) {
 	var self = this;
 	self.typeName = type;
 	self.name = name;
 	self.isSelected = ko.observable(selected);
-}
+};
 
 var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 	var self = this;
+	console.log(googlePlace);
 	self.placeResult = googlePlace;
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
 	self.labelIcon = iconLabel;
@@ -179,7 +205,6 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 		}
 		return true;
 	};
-
 };
 
 var MapViewModel = function() {
@@ -190,7 +215,6 @@ var MapViewModel = function() {
 	self.searchTerm = ko.observable('');
 
 	self.mapOptions = new MapOptions();
-
 	self.isLoading = ko.observable(true);
 
 	self.map = new google.maps.Map(document.getElementById('map'), {
@@ -230,6 +254,7 @@ var MapViewModel = function() {
 		self.resetMarkers();
 		var request = self.mapOptions.getOptionsObject();
 		self.placesService.nearbySearch(request, self.placeServiceCallback);
+		self.mapOptions.updateLocalStorage();
 	}
 
 	self.selectPlace = function(mapPlace) {

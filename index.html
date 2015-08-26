@@ -84,6 +84,10 @@
 					</div>
 					<div class="modal-body">
 						<img data-bind="attr: {src: imageUrl}">
+						<h4>Information</h4>
+						<p data-bind="text: placeResult.vicinity"></p>
+						<p data-bind="visible: placeResult.opening_hours.open_now">Open Now!</p>
+						<br>
 						<div data-bind="visible: !isWikiFailed()">
 							<h4>Wikipedia Information</h4>
 							<div data-bind="visible: !isWikiLoaded()">
@@ -145,6 +149,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js" async></script>
 		<script type="text/javascript" src="js/knockout-3.3.0.js" async></script>
+		<script type="text/javascript" src="js/json2.js" async></script>
 		<script type="text/javascript" src="js/app.js" async></script>
 
 		<script async defer
