@@ -46,7 +46,6 @@ var MapOptions = function() {
 			self.latitude = localSettings.latitude;
 			self.longitude = localSettings.longitude;
 			var localArray = localSettings["placeTypePrefs"];
-			console.log(localArray);
 			for(var i = 0, x = Math.min(localSettings.placeTypePrefs.length, self.placeTypePrefs.length); i < x; i++) {
 				if(self.placeTypePrefs[i].typeName == localSettings.placeTypePrefs[i].typeName) {
 					self.placeTypePrefs[i].isSelected(localSettings.placeTypePrefs[i].isSelected);
@@ -57,8 +56,6 @@ var MapOptions = function() {
 	}
 
 	self.initialize();
-
-	
 
 	self.getLocation = function() {
 		return new google.maps.LatLng(self.latitude, self.longitude);
@@ -93,8 +90,14 @@ var PlaceType = function(name, type, selected) {
 
 var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 	var self = this;
-	console.log(googlePlace);
+
 	self.placeResult = googlePlace;
+	console.log(googlePlace);
+	if(self.placeResult.photos) {
+		for(var i = 0, x = self.placeResult.photos.length; i < x; i++) {
+			console.log(self.placeResult.photos[i].getUrl({maxWidth: 270}));
+		}
+	}
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
 	self.labelIcon = iconLabel;
 
@@ -207,6 +210,16 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 	};
 };
 
+var UserData = function(googleCode) {
+	var self = this;
+
+	self.googleCode = googleCode;
+
+	self.rating = ko.observable(-1);
+
+	self.commentArray = ko.observableArray([]);
+};
+
 var MapViewModel = function() {
 	var self = this;
 	self.placesArray = [];
@@ -226,7 +239,7 @@ var MapViewModel = function() {
 
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
-			var labels = 'ABCDEFGHIJKLM';
+			var labels = 'ABCDEFGHIJKLMNOP';
 			self.resetMarkers();
 			self.placesArray = [];
 			self.placesFilteredArray.removeAll();
@@ -275,7 +288,5 @@ var MapViewModel = function() {
 		}
 		self.placesFilteredArray(newArray);
 	};
-
 	self.updatePlaces();
-
 };
