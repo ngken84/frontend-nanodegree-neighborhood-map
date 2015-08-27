@@ -25,14 +25,13 @@
 				</div>
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a href="#">Options <span class="sr-only">(current)</span></a></li>
-						<li><a data-target="#optionsModal" data-toggle="modal" href="#">Link</a></li>
+						<li><a data-target="#optionsModal" data-toggle="modal" href="#">Options</a></li>
 					</ul>
 					<form class="navbar-form navbar-left" role="search">
 						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Search">
+							<input data-bind="textInput: newAddress" type="text" class="form-control" placeholder="Search">
 						</div>
-						<button type="submit" class="btn btn-default">Submit</button>
+						<button class="btn btn-default" data-bind="click: updateAddress">Submit</button>
 					</form>
 				</div>
 			</div>

@@ -75,6 +75,11 @@ var MapOptions = function() {
 		}
 	};
 
+	self.setLocation = function(lat, lon) {
+		self.latitude = lat;
+		self.longitude = lon;
+	};
+
 	self.updateLocalStorage = function() {
 		var stringOptions = JSON.stringify(ko.toJS(self));
 		localStorage.setItem('kenmap-mapOptions', stringOptions);
@@ -289,4 +294,38 @@ var MapViewModel = function() {
 		self.placesFilteredArray(newArray);
 	};
 	self.updatePlaces();
+
+
+	self.geocoder = new google.maps.Geocoder();
+
+	self.newAddress = ko.observable("");
+
+	self.updateAddress = function() {
+		var address = self.newAddress();
+		if(address && address.length > 0) {
+			self.geocoder.geocode({'address': address}, self.geocodeCallback);
+		} else {
+
+		}
+	};
+
+	self.geocodeCallback = function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			if(results.length == 1) {
+				var lat = results[0].geometry.location.G;
+				var lon = results[0].geometry.location.K;
+
+				self.map.setCenter(results[0].geometry.location);
+
+				self.mapOptions.setLocation(lat, lon);
+				self.updatePlaces();
+			}
+			for(var i = 0, x = results.length; i < x; i++) {
+				console.log(results[i]);
+			}
+		} else {
+
+		}
+	}
+
 };
