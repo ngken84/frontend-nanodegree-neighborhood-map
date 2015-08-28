@@ -299,14 +299,15 @@ var MapViewModel = function() {
 	self.geocoder = new google.maps.Geocoder();
 
 	self.newAddress = ko.observable("");
+	self.partialAddressList = ko.observableArray([]);
 
 	self.updateAddress = function() {
 		var address = self.newAddress();
 		if(address && address.length > 0) {
 			self.geocoder.geocode({'address': address}, self.geocodeCallback);
 		} else {
-
-		}
+			alert('Please enter a valid address');
+		}	
 	};
 
 	self.geocodeCallback = function(results, status) {
@@ -314,18 +315,26 @@ var MapViewModel = function() {
 			if(results.length == 1) {
 				var lat = results[0].geometry.location.G;
 				var lon = results[0].geometry.location.K;
-
 				self.map.setCenter(results[0].geometry.location);
-
 				self.mapOptions.setLocation(lat, lon);
 				self.updatePlaces();
-			}
-			for(var i = 0, x = results.length; i < x; i++) {
-				console.log(results[i]);
+			} else if(results.length == 0) {
+				alert("No locations found matching that address");
+			} else {
+				self.partialAddressList(results);
+				$('#locationsPickerModal').modal('show');
+				console.log(results);
 			}
 		} else {
-
+			alert('Unable to contact Google Services');
 		}
-	}
+	};
 
+	self.selectNewAddress = function(place) {
+		self.mapOptions.setLocation(place.geometry.location.G, place.geometry.location.K);
+		self.map.setCenter(place.geometry.location);
+		self.updatePlaces();
+		$('#locationsPickerModal').modal('hide');
+	};
 };
+
