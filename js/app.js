@@ -213,6 +213,7 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 		}
 		return true;
 	};
+	self.userData = new UserData(self.placeResult['place_id']);
 };
 
 var UserData = function(googleCode) {
@@ -220,9 +221,45 @@ var UserData = function(googleCode) {
 
 	self.googleCode = googleCode;
 
-	self.rating = ko.observable(-1);
+	self.rating = ko.observable(0);
 
 	self.commentArray = ko.observableArray([]);
+
+	self.newComment = ko.observable("");
+
+	self.getLocalStorageKey = function() {
+		return 'kenmap-' + self.googleCode;
+	};
+
+	self.initialize = function() {
+		var key = self.getLocalStorageKey();
+		var localData = localStorage.getItem(key);
+		if(localData) {
+			localData = JSON.parse(localData);
+			self.rating = ko.observable(localData.rating);
+			self.commentArray = ko.observableArray(localData.commentArray);
+		}
+	};
+
+
+
+	self.addComment = function() {
+		if(self.newComment().length > 0) {
+			var d = new Date();
+			var dateStr = (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear();
+			self.commentArray.push({
+				date: dateStr,
+				comment: self.newComment()
+			});
+			console.log(self.googleCode);
+			if(self.googleCode) {
+				localStorage.setItem(self.getLocalStorageKey(), JSON.stringify(ko.toJS(self)));
+			}
+			self.newComment("");
+		}
+	};
+
+	self.initialize();
 };
 
 var MapViewModel = function() {
@@ -289,7 +326,7 @@ var MapViewModel = function() {
 			if(self.placesArray[i] && self.placesArray[i].doesMatchFilter(filter)) {
 				newArray.push(self.placesArray[i]);
 				self.placesArray[i].createMarker(self.map, self.openModal);
-			} 
+			}
 		}
 		self.placesFilteredArray(newArray);
 	};
@@ -307,7 +344,7 @@ var MapViewModel = function() {
 			self.geocoder.geocode({'address': address}, self.geocodeCallback);
 		} else {
 			alert('Please enter a valid address');
-		}	
+		}
 	};
 
 	self.geocodeCallback = function(results, status) {

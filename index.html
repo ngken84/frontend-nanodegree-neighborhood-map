@@ -109,6 +109,20 @@
 								</li>
 							</ul>
 						</div>
+						<div data-bind="with: userData">
+							<h4>User Comments</h4>
+							<p data-bind="visible: commentArray().length == 0">
+								No user comments
+							</p>
+							<ul class="list-unstyled" data-bind="visible: commentArray().length > 0, foreach: commentArray">
+								<li>
+									<p data-bind="text: date"></p>
+									<p data-bind="text: comment"></p>
+								</li>
+							</ul>
+							<textarea data-bind="textInput: newComment"></textarea>
+							<button data-bind="click: addComment">Add New Note</button>
+						</div>
 
 					</div>
 					<div class="modal-footer">
