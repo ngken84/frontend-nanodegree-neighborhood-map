@@ -1,6 +1,20 @@
 
 function initialize() {
 	ko.applyBindings(new MapViewModel());
+
+	$("#side-panel-open-btn").click(function() {
+		$("#side-panel").slideToggle();
+		$("#side-panel-open-btn").hide();
+		$("#map-container").css("right", "0");
+		$("#map").css("margin-left", "0");
+	});
+
+	$("#close-panel-btn").click(function() {
+		$("#side-panel").slideToggle();
+		$("#side-panel-open-btn").show();
+		$("#map-container").css("right", "20px");
+		$("#map").css("margin-left", "20px");
+	});
 };
 
 var MapOptions = function() {
