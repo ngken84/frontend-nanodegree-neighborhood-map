@@ -217,14 +217,30 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 	self.isGoogleDataLoaded = ko.observable(false);
 	self.googleData = ko.observable(null);
 
+	self.checkIfObjectHasProperty = function(data, property) {
+		if(!data.hasOwnProperty(property)){
+			data[property] = null;
+		}
+	}
+
 	self.loadGoogleData = function(placeService) {
 		if(!self.isGoogleDataLoaded() && self.placeResult['place_id']) {
 			placeService.getDetails({placeId: self.placeResult['place_id']}, function (data, result) {
 				console.log(data);
+				self.checkIfObjectHasProperty(data, 'formatted_phone_number');
+				self.checkIfObjectHasProperty(data, 'website');
+				self.checkIfObjectHasProperty(data, 'reviews');
+				if(data.reviews) {
+					for(var i = 0, x = data.reviews.length; i < x; i++) {
+						self.checkIfObjectHasProperty(data.reviews[i], 'author_url')
+					}
+				}
 				self.googleData(data);
 			});
 		}
 	};
+
+	
 
 	// gets google maps LatLng object for teh place
 	self.getLocation = function() {

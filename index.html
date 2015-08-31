@@ -110,11 +110,11 @@
 							<p class="no-margin" data-bind="visible: formatted_address, text: formatted_address"></p>
 							<p class="no-margin" data-bind="visible: formatted_phone_number">Phone: <span data-bind="text: formatted_phone_number"></span></p>
 							<p class="no-margin" data-bind="visible: website">Web: <a target="_blank" data-bind="text: website, attr: {href: website}"></a></p>
-
 							<h4 data-bind="visible: reviews && reviews.length > 0">Google Reviews</h4>
-							<ul class="list-unstyled" data-bind="foreach: reviews">
+							<ul class="list-unstyled" data-bind="visible: reviews, foreach: reviews">
 								<li>
-									<p class="no-margin"><a target="_blank" data-bind="attr: {href: author_url}, text: author_name"></a></p>
+									<p class="no-margin"><a target="_blank" data-bind="visible: author_url, attr: {href: author_url}, text: author_name"></a></p>
+									<p class="no-margin" data-bind="visible: author_url == null, text: author_name"></p>
 									<p class="no-margin"> Rating : <span data-bind="text: rating"></span></p>
 									<p data-bind="visible: text, text: text"></p>
 								</li>
