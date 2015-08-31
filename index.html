@@ -113,10 +113,10 @@
 
 							<h4 data-bind="visible: reviews && reviews.length > 0">Google Reviews</h4>
 							<ul class="list-unstyled" data-bind="foreach: reviews">
-								<li>
+								<li data-bind="visible: author_name && author_url && rating">
 									<p class="no-margin"><a target="_blank" data-bind="attr: {href: author_url}, text: author_name"></a></p>
 									<p class="no-margin"> Rating : <span data-bind="text: rating"></span></p>
-									<p data-bind="visible: text, text: text"></p>
+									<p data-bind="visible: text && text.length > 0, text: text"></p>
 								</li>
 							</ul>
 						</div>
