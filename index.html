@@ -91,7 +91,6 @@
 					</ul>
 				</div>
 			</div>
-
 		</div>
 
 
@@ -106,8 +105,21 @@
 					<div class="modal-body">
 						<img data-bind="attr: {src: imageUrl}">
 						<h4>Information</h4>
-						<p class="no-margin" data-bind="text: placeResult.vicinity"></p>
-						<p class="no-margin" data-bind="visible: placeResult.opening_hours && placeResult.opening_hours.open_now">Open Now!</p>
+						<p class="no-margin" data-bind="visible: googleData() == null, text: placeResult.vicinity"></p>
+						<div data-bind="visible: googleData(), with: googleData">
+							<p class="no-margin" data-bind="visible: formatted_address, text: formatted_address"></p>
+							<p class="no-margin" data-bind="visible: formatted_phone_number">Phone: <span data-bind="text: formatted_phone_number"></span></p>
+							<p class="no-margin" data-bind="visible: website">Web: <a target="_blank" data-bind="text: website, attr: {href: website}"></a></p>
+
+							<h4 data-bind="visible: reviews && reviews.length > 0">Google Reviews</h4>
+							<ul class="list-unstyled" data-bind="foreach: reviews">
+								<li>
+									<p class="no-margin"><a target="_blank" data-bind="attr: {href: author_url}, text: author_name"></a></p>
+									<p class="no-margin"> Rating : <span data-bind="text: rating"></span></p>
+									<p data-bind="visible: text, text: text"></p>
+								</li>
+							</ul>
+						</div>
 						<br>
 						<div data-bind="visible: !isWikiFailed()">
 							<h4>Wikipedia Information</h4>

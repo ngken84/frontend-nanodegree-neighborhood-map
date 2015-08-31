@@ -214,6 +214,17 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 	}
 
 	//Data from Google Place Details web service
+	self.isGoogleDataLoaded = ko.observable(false);
+	self.googleData = ko.observable(null);
+
+	self.loadGoogleData = function(placeService) {
+		if(!self.isGoogleDataLoaded() && self.placeResult['place_id']) {
+			placeService.getDetails({placeId: self.placeResult['place_id']}, function (data, result) {
+				console.log(data);
+				self.googleData(data);
+			});
+		}
+	};
 
 	// gets google maps LatLng object for teh place
 	self.getLocation = function() {
@@ -364,7 +375,6 @@ var MapViewModel = function() {
 			self.isEmpty(false);
 			self.isError(false);
 			self.isLoading(false);
-			console.log("Hello");
 		} else if(status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
 			self.isLoading(false);
 			self.isError(false);
@@ -404,6 +414,7 @@ var MapViewModel = function() {
 		self.currentPlace(mapPlace);
 		mapPlace.loadWikipediaData();
 		mapPlace.loadNYTimesData();
+		mapPlace.loadGoogleData(self.placesService);
 	};
 
 	// Filters the current places array based on the search term
