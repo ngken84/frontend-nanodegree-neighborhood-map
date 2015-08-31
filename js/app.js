@@ -7,7 +7,7 @@ function initialize() {
 	$("#side-panel-open-btn").click(function() {
 		$("#side-panel").slideToggle();
 		$("#side-panel-open-btn").hide();
-		$("#map-container").css("right", "0");
+		$("#map-container").css("right", "15px");
 		$("#map").css("margin-left", "0");
 	});
 
@@ -362,7 +362,7 @@ var MapViewModel = function() {
 			}
 			self.placesFilteredArray(self.placesArray);
 			self.isEmpty(false);
-			self.isError(true);
+			self.isError(false);
 			self.isLoading(false);
 			console.log("Hello");
 		} else if(status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {

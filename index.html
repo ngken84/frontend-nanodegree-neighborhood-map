@@ -12,12 +12,16 @@
 			#map { height: 100%; margin-left: 20px;}
 			#map-container { position:absolute; top: 0; bottom:0; right: 20px; padding: 0; }
 			#side-panel { display:none; position:absolute; top: 0; bottom: 0; overflow-y: scroll;}
-			#side-panel-open-btn { background:url(img/triangle-left.png) no-repeat center center; background-color: lightgray; position:absolute; top: 0; right: 0; bottom: 0; width: 20px; }
+			#side-panel-open-btn { background:url(img/triangle-left.png) no-repeat center center; background-color: #FBFBFB; position:absolute; top: 0; right: 0; bottom: 0; width: 20px; }
 			#main { position: fixed; top: 55px; bottom: 0px; width: 100%; }
 			#id { margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black; }
 			.inline { display: inline; }
 			.no-margin { margin: 0;}
 			#side-panel-header { text-align: center; background-color: white; padding: 10px; border-radius: 10px; border: 2px solid lightblue; }
+			.loading-div { background:url(img/ajax-loader.gif) no-repeat center center; width: 100%; height: 100px; }
+			.note-date { font-size: 10px;}
+			.new-note-textarea { resize: none; width:100%;}
+			.white-back { padding: 10px; background-color: white;}
 		</style>
 
 	</head>
@@ -57,15 +61,20 @@
 				<div id="side-panel" class="col-md-offset-9 col-sm-offset-6 col-md-3 col-sm-6">
 					<input id="close-panel-btn" type="image" src="img/close.png">
 					<h3 id="side-panel-header">Nearby Places</h3>
-					<div class="input-group">
+					<div data-bind="visible: !isEmpty() && !isError()"class="input-group">
 						<span class="input-group-btn" class="img-responsive">
 							<button class="btn btn-default" type="button" data-bind="click: filterPlaces">Go!</button>
 						</span>
 						<input type="text" class="form-control" placeholder="Search for..." data-bind="textInput: searchTerm">
 					</div>
 					<br>
-					<div data-bind="visible: isLoading()">
-						<img src="img/ajax-loader.gif">
+					<div class="loading-div" data-bind="visible: isLoading()">
+					</div>
+					<div class="white-back" data-bind="visible: isEmpty">
+						<p>No results found...</p>
+					</div>
+					<div class="white-back" data-bind="visible: isEmpty">
+						<p>Unable to reach Google Places...</p>
 					</div>
 					<ul data-bind="visible: !isLoading(),foreach: placesFilteredArray()" class="list-unstyled">
 						<li data-toggle="modal" data-target="#myModal" data-bind="click: $root.selectPlace">
@@ -97,28 +106,24 @@
 					<div class="modal-body">
 						<img data-bind="attr: {src: imageUrl}">
 						<h4>Information</h4>
-						<p data-bind="text: placeResult.vicinity"></p>
-						<p data-bind="visible: placeResult.opening_hours && placeResult.opening_hours.open_now">Open Now!</p>
+						<p class="no-margin" data-bind="text: placeResult.vicinity"></p>
+						<p class="no-margin" data-bind="visible: placeResult.opening_hours && placeResult.opening_hours.open_now">Open Now!</p>
 						<br>
 						<div data-bind="visible: !isWikiFailed()">
 							<h4>Wikipedia Information</h4>
-							<div data-bind="visible: !isWikiLoaded()">
-	  							<img src="img/ajax-loader.gif">
-							</div>
+							<div class="loading-div" data-bind="visible: !isWikiLoaded()"></div>
 							<ul class="list-unstyled" data-bind="visible: isWikiLoaded() && !isWikiFailed(), foreach: wikiInformation">
 								<li>
-									<a target="_blank" data-bind="text: name, attr: {href: link}"></a>, <span data-bind="text: desc"></span>
+									<a target="_blank" data-bind="text: name, attr: {href: link}"></a><span data-bind="visible: desc && desc.length > 0",</span> <span data-bind="text: desc"></span>
 								</li>
 							</ul>
 						</div>
 						<div data-bind="visible: !isNYTimesFailed()">
 							<h4>New York Times Articles</h4>
-							<div data-bind="visible: !isNYTimesLoaded()">
-	  							<img src="img/ajax-loader.gif">
-							</div>
+							<div class="loading-div" data-bind="visible: !isNYTimesLoaded()"></div>
 							<ul class="list-unstyled" data-bind="visible: isNYTimesLoaded() && !isNYTimesFailed(), foreach: nytInformation">
 								<li>
-									<a target="_blank" data-bind="text: name, attr: {href: link}"></a>, <span data-bind="text: desc"></span>
+									<a target="_blank" data-bind="text: name, attr: {href: link}"></a><span data-bind="visible: desc && desc.length > 0">,</span> <span data-bind="text: desc"></span>
 								</li>
 							</ul>
 						</div>
@@ -129,16 +134,17 @@
 							</p>
 							<ul class="list-unstyled" data-bind="visible: commentArray().length > 0, foreach: commentArray">
 								<li>
-									<p data-bind="text: date"></p>
+									<p class="no-margin note-date" data-bind="text: date"></p>
 									<p data-bind="text: comment"></p>
 								</li>
 							</ul>
-							<textarea data-bind="textInput: newComment"></textarea>
+							<textarea class="new-note-textarea"data-bind="textInput: newComment"></textarea>
 							<button data-bind="click: addComment">Add New Note</button>
 						</div>
 
 					</div>
 					<div class="modal-footer">
+						<img src="img/powered-by-google-on-white.png">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 				</div>
