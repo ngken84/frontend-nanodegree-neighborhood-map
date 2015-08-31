@@ -7,15 +7,22 @@
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<style type="text/css">
 			html, body { height: 100%; margin: 0; padding: 0; }
+			#close-panel-btn {margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black;}
+			#navigation-bar { margin: 0; z-index: 1; }
 			#map { height: 100%; margin-left: 20px;}
 			#map-container { position:absolute; top: 0; bottom:0; right: 20px; padding: 0; }
 			#side-panel { display:none; position:absolute; top: 0; bottom: 0; overflow-y: scroll;}
 			#side-panel-open-btn { background:url(img/triangle-left.png) no-repeat center center; background-color: lightgray; position:absolute; top: 0; right: 0; bottom: 0; width: 20px; }
+			#main { position: fixed; top: 55px; bottom: 0px; width: 100%; }
+			#id { margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black; }
+			.inline { display: inline; }
+			.no-margin { margin: 0;}
+			#side-panel-header { text-align: center; background-color: white; padding: 10px; border-radius: 10px; border: 2px solid lightblue; }
 		</style>
 
 	</head>
 	<body>
-		<nav class="navbar navbar-default" style="margin: 0; z-index: 1">
+		<nav id="navigation-bar" class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -41,15 +48,15 @@
 		</nav>
 
 
-		<div class="container-fluid" style="position: fixed; top: 55px; bottom: 0px; width: 100%;">
-			<div class="row" style="">
+		<div id="main" class="container-fluid">
+			<div class="row">
 				<div id="map-container" class="col-md-12 col-sm-12 col-xs-12">
 					<div id="map"></div>
 				</div>
 				<div id="side-panel-open-btn"></div>
-				<div id="side-panel" class="col-md-offset-9 col-sm-offset-8 col-md-3 col-sm-4">
-					<input id="close-panel-btn" type="image" src="img/close.png" style="margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black;">
-					<h3>Nearby Places</h3>
+				<div id="side-panel" class="col-md-offset-9 col-sm-offset-6 col-md-3 col-sm-6">
+					<input id="close-panel-btn" type="image" src="img/close.png">
+					<h3 id="side-panel-header">Nearby Places</h3>
 					<div class="input-group">
 						<span class="input-group-btn" class="img-responsive">
 							<button class="btn btn-default" type="button" data-bind="click: filterPlaces">Go!</button>
@@ -85,7 +92,7 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<img height="20px" width="20px" data-bind="attr: {src: placeResult.icon}">
-						<h4 class="modal-title" id="myModalLabel" data-bind="text: placeResult.name" style="display: inline">Modal title</h4>
+						<h4 class="modal-title inline" id="myModalLabel" data-bind="text: placeResult.name" >Modal title</h4>
 					</div>
 					<div class="modal-body">
 						<img data-bind="attr: {src: imageUrl}">
@@ -144,15 +151,16 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="optionsLabel" style="display: inline">Ken's Map Options</h4>
+						<h4 class="modal-title inline" id="optionsLabel">Ken's Map Options</h4>
 					</div>
 					<div class="modal-body" data-bind="with: mapOptions">
-						<div style="display: block">
-							<label for="input-map-range">Range</label><input id="input-map-range" type="number" data-bind="value: range">
+						<div>
+							<label for="input-map-range">Range</label> <input id="input-map-range" type="number" data-bind="value: range">
 						</div>
+						<h4>Place Type Filters:</h4>
 						<ul class="list-unstyled" data-bind="foreach: placeTypePrefs">
 							<div style="display:inline-block; width: 30%">
-								<input type="checkbox" data-bind="checked: isSelected"><label data-bind="text: name"></label>
+								<input type="checkbox" data-bind="checked: isSelected, attr: {'id': placeTypeId}"> <label data-bind="text: name, attr: {'for': placeTypeId}"></label>
 							</div>
 						</ul>
 
