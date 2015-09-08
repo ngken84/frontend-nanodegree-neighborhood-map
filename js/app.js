@@ -1,5 +1,6 @@
 /*
-Initialize runs when the after the google map is finished loading. Sets up the ViewModel and side panel
+Initialize runs when the after the google map is finished loading.
+Sets up the ViewModel and side panel click listeners.
 */
 function initialize() {
 	ko.applyBindings(new MapViewModel());
@@ -20,7 +21,7 @@ function initialize() {
 };
 
 /*
-MapOptions contains the
+MapOptions contains the options that dictate what types of places will be marked on the map.
 */
 var MapOptions = function() {
 	var self = this;
@@ -372,11 +373,39 @@ var MapViewModel = function() {
 	self.isEmpty = ko.observable(false);
 	self.isError = ko.observable(false);
 
+	// Set up map options
+	var mapStyle = [{
+		stylers: [
+		{ hue: "#5eff00" },
+		{ saturation: 49 },
+		{ gamma: 0.72 },
+		{ saturation: 49 },
+		{ weight: 3.4}]
+	}, {
+		elementType: "labels.text",
+		stylers: [
+		{ visibility: "simplified"},
+		{ color: "#1d661a"}]
+	}, {
+		elementType: "labels.icon",
+		stylers: [{ visibility: "off"}]
+	}];
+
+	var styledMap = new google.maps.StyledMapType(mapStyle,
+		{name: "Fallout Style Map"});
+
 	// The Google Map Object
 	self.map = new google.maps.Map(document.getElementById('map'), {
 		center: self.mapOptions.getLocation(),
 		zoom: 17
 	});
+
+	self.map.mapTypes.set('map_style', styledMap);
+	self.map.setMapTypeId('map_style');
+
+
+
+	self.map
 
 	// Places Service Object
 	self.placesService = new google.maps.places.PlacesService(self.map);
