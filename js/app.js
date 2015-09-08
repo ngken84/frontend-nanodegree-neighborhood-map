@@ -20,7 +20,7 @@ function initialize() {
 };
 
 /*
-Contains the options for the Google API search.
+MapOptions contains the
 */
 var MapOptions = function() {
 	var self = this;
