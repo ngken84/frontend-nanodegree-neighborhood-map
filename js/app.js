@@ -373,39 +373,41 @@ var MapViewModel = function() {
 	self.isEmpty = ko.observable(false);
 	self.isError = ko.observable(false);
 
-	// Set up map options
-	var mapStyle = [{
-		stylers: [
-		{ hue: "#5eff00" },
-		{ saturation: 49 },
-		{ gamma: 0.72 },
-		{ saturation: 49 },
-		{ weight: 3.4}]
-	}, {
-		elementType: "labels.text",
-		stylers: [
-		{ visibility: "simplified"},
-		{ color: "#1d661a"}]
-	}, {
-		elementType: "labels.icon",
-		stylers: [{ visibility: "off"}]
-	}];
+	self.initializeMap = function() {
+		var mapStyle = [{
+			stylers: [
+			{ hue: "#5eff00" },
+			{ saturation: 49 },
+			{ gamma: 0.72 },
+			{ saturation: 49 },
+			{ weight: 2.2},
+			{ lightness: -63}]
+		}, {
+			elementType: "labels.text",
+			stylers: [
+			{ visibility: "simplified"},
+			{ color: "#1d661a"}]
+		}, {
+			elementType: "labels.icon",
+			stylers: [{ visibility: "off"}]
+		}];
 
-	var styledMap = new google.maps.StyledMapType(mapStyle,
-		{name: "Fallout Style Map"});
+		// Set up map options
+		var styledMap = new google.maps.StyledMapType(mapStyle, {name: "Fallout Style Map"});
 
-	// The Google Map Object
-	self.map = new google.maps.Map(document.getElementById('map'), {
-		center: self.mapOptions.getLocation(),
-		zoom: 17
-	});
+		// The Google Map Object
+		self.map = new google.maps.Map(document.getElementById('map'), {
+			center: self.mapOptions.getLocation(),
+			zoom: 17
+		});
 
-	self.map.mapTypes.set('map_style', styledMap);
-	self.map.setMapTypeId('map_style');
+		self.map.mapTypes.set('map_style', styledMap);
+		self.map.setMapTypeId('map_style');
+	};
 
 
 
-	self.map
+	self.initializeMap();
 
 	// Places Service Object
 	self.placesService = new google.maps.places.PlacesService(self.map);
