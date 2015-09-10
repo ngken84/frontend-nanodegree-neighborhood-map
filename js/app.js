@@ -251,10 +251,23 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 
 	// creates a marker on the map
 	self.createMarker = function(gMap, clickFunction) {
+		var image = {
+			url: 'img/bar.png',
+			size: new google.maps.Size(36, 36),
+			origin: new google.maps.Point(0, 0),
+			anchor: new google.maps.Point(0, 36)
+		}
+
+		var shape = {
+			coords: [1,1,1,36,36,36,36,1],
+			type: 'poly'
+		}
+
 		self.marker = new google.maps.Marker({
 			position : self.getLocation(),
 			map : gMap,
-			label : iconLabel
+			icon: image,
+			shape: shape
 		});
 
 		// Adds click listener for the map marker.
