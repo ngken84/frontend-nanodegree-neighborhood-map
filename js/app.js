@@ -129,14 +129,59 @@ var PlaceType = function(name, type, selected) {
 /*
 Map Place object contains an place returned by the google places api. Also contains information pulled from various services on those places.
 */
-var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
+var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	var self = this;
 
 	self.placeResult = googlePlace;
 
+	console.log(googlePlace);
+
+	self.setIconLabel = function(typeArray) {
+		self.labelIcon = null;
+		for(var i = 0, x = typeArray.length; i < x; i++) {
+			console.log(typeArray[i]);
+			switch(typeArray[i]) {
+				case "art_gallery":
+				case "museum":
+					self.labelIcon = "img/art.png";
+					return;
+				case "cafe":
+					self.labelIcon = "img/cafe.png";
+					return;
+				case "campground":
+					self.labelIcon = "img/park.png";
+					return;
+				case "clothing_store":
+				case "convenience_store":
+				case "department_store":
+				case "grocery_or_supermarket":
+				case "hardware_store":
+				case "jewelry_store":
+				case "store":
+					self.labelIcon = "img/shopping.png";
+					return;
+				case "food":
+				case "meal_delivery":
+				case "meal_takeaway":
+					self.labelIcon = "img/restaurant.png";
+					return;
+				case "movie_theatre":
+					self.labelIcon = "img/movie.png";
+					return;
+				case "night_club":
+				case "bar":
+					self.labelIcon = "img/bar.png";
+					return;
+
+			}
+		}
+		console.log('here');
+		self.labelIcon = "img/sign.png";
+	}
+
 	//Image URL base on google street view api
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
-	self.labelIcon = iconLabel;
+	self.setIconLabel(googlePlace.types);
 
 
 	// Data from wikipedia
@@ -241,6 +286,7 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 		}
 	};
 
+	console.log(self.labelIcon);
 
 
 	// gets google maps LatLng object for teh place
@@ -251,8 +297,9 @@ var MapPlace = function(googlePlace, googleMap, iconLabel, openModalFunction) {
 
 	// creates a marker on the map
 	self.createMarker = function(gMap, clickFunction) {
+
 		var image = {
-			url: 'img/bar.png',
+			url: self.labelIcon,
 			size: new google.maps.Size(36, 36),
 			origin: new google.maps.Point(0, 0),
 			anchor: new google.maps.Point(0, 36)
@@ -428,12 +475,11 @@ var MapViewModel = function() {
 
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
-			var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			self.resetMarkers();
 			self.placesArray = [];
 			self.placesFilteredArray.removeAll();
-			for(var i = 0, x = Math.min(results.length, labels.length); i < x; i++){
-				self.placesArray.push(new MapPlace(results[i], self.map, labels[i], self.openModal));
+			for(var i = 0, x = results.length; i < x; i++){
+				self.placesArray.push(new MapPlace(results[i], self.map, self.openModal));
 			}
 			self.placesFilteredArray(self.placesArray);
 			self.isEmpty(false);
