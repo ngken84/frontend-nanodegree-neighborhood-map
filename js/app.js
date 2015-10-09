@@ -136,53 +136,8 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 
 	console.log(googlePlace);
 
-	self.setIconLabel = function(typeArray) {
-		self.labelIcon = null;
-		for(var i = 0, x = typeArray.length; i < x; i++) {
-			console.log(typeArray[i]);
-			switch(typeArray[i]) {
-				case "art_gallery":
-				case "museum":
-					self.labelIcon = "img/art.png";
-					return;
-				case "cafe":
-					self.labelIcon = "img/cafe.png";
-					return;
-				case "campground":
-					self.labelIcon = "img/park.png";
-					return;
-				case "clothing_store":
-				case "convenience_store":
-				case "department_store":
-				case "grocery_or_supermarket":
-				case "hardware_store":
-				case "jewelry_store":
-				case "store":
-					self.labelIcon = "img/shopping.png";
-					return;
-				case "food":
-				case "meal_delivery":
-				case "meal_takeaway":
-					self.labelIcon = "img/restaurant.png";
-					return;
-				case "movie_theatre":
-					self.labelIcon = "img/movie.png";
-					return;
-				case "night_club":
-				case "bar":
-					self.labelIcon = "img/bar.png";
-					return;
-
-			}
-		}
-		console.log('here');
-		self.labelIcon = "img/sign.png";
-	}
-
 	//Image URL base on google street view api
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
-	self.setIconLabel(googlePlace.types);
-
 
 	// Data from wikipedia
 	self.isWikiLoaded = ko.observable(false);
@@ -272,7 +227,6 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	self.loadGoogleData = function(placeService) {
 		if(!self.isGoogleDataLoaded() && self.placeResult['place_id']) {
 			placeService.getDetails({placeId: self.placeResult['place_id']}, function (data, result) {
-				console.log(data);
 				self.checkIfObjectHasProperty(data, 'formatted_phone_number');
 				self.checkIfObjectHasProperty(data, 'website');
 				self.checkIfObjectHasProperty(data, 'reviews');
@@ -286,21 +240,18 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 		}
 	};
 
-	console.log(self.labelIcon);
-
-
 	// gets google maps LatLng object for teh place
 	self.getLocation = function() {
 		var location = self.placeResult.geometry.location;
-		return new google.maps.LatLng(location.G, location.K);
+		console.log(location);
+		return new google.maps.LatLng(location.H, location.L);
 	};
 
 	// creates a marker on the map
 	self.createMarker = function(gMap, clickFunction) {
-
 		var image = {
-			url: self.labelIcon,
-			size: new google.maps.Size(36, 36),
+			url: self.placeResult.icon,
+			scaledSize: new google.maps.Size(36, 36),
 			origin: new google.maps.Point(0, 0),
 			anchor: new google.maps.Point(0, 36)
 		}
@@ -309,6 +260,8 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 			coords: [1,1,1,36,36,36,36,1],
 			type: 'poly'
 		}
+
+		console.log(self.getLocation());
 
 		self.marker = new google.maps.Marker({
 			position : self.getLocation(),
@@ -327,6 +280,19 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 				self.marker.setAnimation(google.maps.Animation.NONE);
 			}, 2500)
 		});
+	}
+
+	self.animateMarker = function() {
+		console.log("hello");
+		if(self.marker != null) {
+			self.marker.setAnimation(google.maps.Animation.BOUNCE);
+		}
+	}
+
+	self.stopAnimation = function() {
+		if(self.marker != null) {
+			self.marker.setAnimation(google.maps.Animation.NONE);
+		}
 	}
 
 	// removes the marker from the map
@@ -435,25 +401,12 @@ var MapViewModel = function() {
 
 	self.initializeMap = function() {
 		var mapStyle = [{
-			stylers: [
-			{ hue: "#5eff00" },
-			{ saturation: 49 },
-			{ gamma: 0.72 },
-			{ saturation: 49 },
-			{ weight: 2.2},
-			{ lightness: -63}]
-		}, {
-			elementType: "labels.text",
-			stylers: [
-			{ visibility: "simplified"},
-			{ color: "#1d661a"}]
-		}, {
 			elementType: "labels.icon",
 			stylers: [{ visibility: "off"}]
 		}];
 
 		// Set up map options
-		var styledMap = new google.maps.StyledMapType(mapStyle, {name: "Fallout Style Map"});
+		var styledMap = new google.maps.StyledMapType(mapStyle, {name: "Styled Map"});
 
 		// The Google Map Object
 		self.map = new google.maps.Map(document.getElementById('map'), {
