@@ -128,12 +128,9 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 
 	self.placeResult = googlePlace;
 
-	console.log(googlePlace);
-
 	//Image URL base on google street view api
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.lat() + ","+ self.placeResult.geometry.location.lng();
 
-	console.log(self.imageUrl);
 
 	// Data from wikipedia
 	self.isWikiLoaded = ko.observable(false);
@@ -239,7 +236,6 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	// gets google maps LatLng object for teh place
 	self.getLocation = function() {
 		var location = self.placeResult.geometry.location;
-		console.log(location);
 		return new google.maps.LatLng(location.lat(), location.lng());
 	};
 
@@ -256,8 +252,6 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 			coords: [1,1,1,36,36,36,36,1],
 			type: 'poly'
 		}
-
-		console.log(self.getLocation());
 
 		self.marker = new google.maps.Marker({
 			position : self.getLocation(),
@@ -521,7 +515,6 @@ var MapViewModel = function() {
 			} else {
 				self.partialAddressList(results);
 				$('#locationsPickerModal').modal('show');
-				console.log(results);
 			}
 		} else {
 			alert('Unable to contact Google Services');
