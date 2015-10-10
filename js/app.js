@@ -137,7 +137,9 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	console.log(googlePlace);
 
 	//Image URL base on google street view api
-	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.G + ","+ self.placeResult.geometry.location.K;
+	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.lat() + ","+ self.placeResult.geometry.location.lng();
+
+	console.log(self.imageUrl);
 
 	// Data from wikipedia
 	self.isWikiLoaded = ko.observable(false);
@@ -244,7 +246,7 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	self.getLocation = function() {
 		var location = self.placeResult.geometry.location;
 		console.log(location);
-		return new google.maps.LatLng(location.H, location.L);
+		return new google.maps.LatLng(location.lat(), location.lng());
 	};
 
 	// creates a marker on the map
@@ -516,8 +518,8 @@ var MapViewModel = function() {
 	self.geocodeCallback = function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
 			if(results.length == 1) {
-				var lat = results[0].geometry.location.G;
-				var lon = results[0].geometry.location.K;
+				var lat = results[0].geometry.location.lat();
+				var lon = results[0].geometry.location.lng();
 				self.map.setCenter(results[0].geometry.location);
 				self.mapOptions.setLocation(lat, lon);
 				self.updatePlaces();
@@ -535,7 +537,7 @@ var MapViewModel = function() {
 
 	// Call back for when a user selects a new neighborhood location in a list.
 	self.selectNewAddress = function(place) {
-		self.mapOptions.setLocation(place.geometry.location.G, place.geometry.location.K);
+		self.mapOptions.setLocation(place.geometry.location.lat(), place.geometry.location.lng());
 		self.map.setCenter(place.geometry.location);
 		self.updatePlaces();
 		$('#locationsPickerModal').modal('hide');
