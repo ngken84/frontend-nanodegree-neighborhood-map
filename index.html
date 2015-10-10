@@ -5,25 +5,7 @@
 		<meta name="viewport" width="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
-		<style type="text/css">
-			html, body { height: 100%; margin: 0; padding: 0; }
-			#close-panel-btn {margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black;}
-			#navigation-bar { margin: 0; z-index: 1; }
-			#map { height: 100%; margin-left: 20px;}
-			#map-container { position:absolute; top: 0; bottom:0; right: 20px; padding: 0; }
-			#side-panel { display:none; position:absolute; top: 0; bottom: 0; overflow-y: scroll;}
-			#side-panel-open-btn { background:url(img/triangle-left.png) no-repeat center center; background-color: #FBFBFB; position:absolute; top: 0; right: 0; bottom: 0; width: 20px; }
-			#main { position: fixed; top: 55px; bottom: 0px; width: 100%; }
-			#id { margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black; }
-			.inline { display: inline; }
-			.no-margin { margin: 0;}
-			#side-panel-header { text-align: center; background-color: white; padding: 10px; border-radius: 10px; border: 2px solid lightblue; }
-			.loading-div { background:url(img/ajax-loader.gif) no-repeat center center; width: 100%; height: 100px; }
-			.note-date { font-size: 10px;}
-			.new-note-textarea { resize: none; width:100%;}
-			.white-back { padding: 10px; background-color: white;}
-		</style>
-
+		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
 		<nav id="navigation-bar" class="navbar navbar-default">
@@ -101,7 +83,7 @@
 						<h4 class="modal-title inline" id="myModalLabel" data-bind="text: placeResult.name" >Modal title</h4>
 					</div>
 					<div class="modal-body">
-						<img data-bind="attr: {src: imageUrl}">
+						<img class="img-responsive" data-bind="attr: {src: imageUrl}">
 						<h4>Information</h4>
 						<p class="no-margin" data-bind="visible: googleData() == null, text: placeResult.vicinity"></p>
 						<div data-bind="visible: googleData(), with: googleData">
