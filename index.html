@@ -156,11 +156,13 @@
 							<label for="input-map-range">Range</label> <input id="input-map-range" type="number" data-bind="value: range">
 						</div>
 						<h4>Place Type Filters:</h4>
-						<ul class="list-unstyled" data-bind="foreach: placeTypePrefs">
-							<div style="display:inline-block; width: 30%">
-								<input type="checkbox" data-bind="checked: isSelected, attr: {'id': placeTypeId}"> <label data-bind="text: name, attr: {'for': placeTypeId}"></label>
-							</div>
-						</ul>
+						<div class="row">
+							<ul class="list-unstyled" data-bind="foreach: placeTypePrefs">
+								<div class="col-md-4 col-sm-6 col-xs-12">
+									<input type="checkbox" data-bind="checked: isSelected, attr: {'id': placeTypeId}"> <label data-bind="text: name, attr: {'for': placeTypeId}"></label>
+								</div>
+							</ul>
+						</div>
 
 					</div>
 					<div class="modal-footer">
