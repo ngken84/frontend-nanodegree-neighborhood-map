@@ -22,6 +22,7 @@
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li><a data-target="#optionsModal" data-toggle="modal" href="#">Options</a></li>
+						<li><a href="#" id="open-list-btn">Locations</a>
 					</ul>
 					<form class="navbar-form navbar-left" role="search">
 						<div class="form-group">
@@ -39,9 +40,7 @@
 				<div id="map-container" class="col-md-12 col-sm-12 col-xs-12">
 					<div id="map"></div>
 				</div>
-				<div id="side-panel-open-btn"></div>
 				<div id="side-panel" class="col-md-offset-9 col-sm-offset-6 col-md-3 col-sm-6">
-					<input id="close-panel-btn" type="image" src="img/close.png">
 					<h3 id="side-panel-header">Nearby Places</h3>
 					<div data-bind="visible: !isEmpty() && !isError()"class="input-group">
 						<span class="input-group-btn" class="img-responsive">

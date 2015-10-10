@@ -1,8 +1,8 @@
 html, body { font-size: 14px; height: 100%; margin: 0; padding: 0; }
 #close-panel-btn {margin: 5px; background-color: white; padding: 2px; border-radius: 15px; border: 2px solid black;}
 #navigation-bar { margin: 0; z-index: 1; }
-#map { height: 100%; margin-left: 20px;}
-#map-container { position:absolute; top: 0; bottom:0; right: 20px; padding: 0; }
+#map { height: 100%; margin-left: 0px;}
+#map-container { position:absolute; top: 0; bottom:0; right: 0px; padding: 0; }
 #side-panel { display:none; position:absolute; top: 0; bottom: 0; overflow-y: scroll;}
 #side-panel-open-btn { background:url(img/triangle-left.png) no-repeat center center; background-color: #FBFBFB; position:absolute; top: 0; right: 0; bottom: 0; width: 20px; }
 #main { position: fixed; top: 55px; bottom: 0px; width: 100%; }

@@ -5,19 +5,13 @@ Sets up the ViewModel and side panel click listeners.
 function initialize() {
 	ko.applyBindings(new MapViewModel());
 
-	$("#side-panel-open-btn").click(function() {
+	var toggleLocations = function() {
 		$("#side-panel").slideToggle();
 		$("#side-panel-open-btn").hide();
-		$("#map-container").css("right", "15px");
-		$("#map").css("margin-left", "0");
-	});
+	}
 
-	$("#close-panel-btn").click(function() {
-		$("#side-panel").slideToggle();
-		$("#side-panel-open-btn").show();
-		$("#map-container").css("right", "20px");
-		$("#map").css("margin-left", "20px");
-	});
+	$("#open-list-btn").click(toggleLocations);
+	$(".navbar-brand").click(toggleLocations);
 };
 
 /*
@@ -285,7 +279,6 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	}
 
 	self.animateMarker = function() {
-		console.log("hello");
 		if(self.marker != null) {
 			self.marker.setAnimation(google.maps.Animation.BOUNCE);
 		}
