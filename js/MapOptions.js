@@ -1,4 +1,16 @@
 /*
+Place type option.
+*/
+var PlaceType = function(name, type, selected) {
+	var self = this;
+	self.typeName = type;
+	self.placeTypeId = "map_options_" + type;
+	self.name = name;
+	self.isSelected = ko.observable(selected);
+};
+
+
+/*
 MapOptions contains the options that dictate what types of places will be marked on the map.
 */
 var MapOptions = function() {
