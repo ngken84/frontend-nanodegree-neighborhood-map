@@ -13,11 +13,6 @@ var UserData = function(googleCode) {
 	self.commentArray = ko.observableArray([]);
 	self.newComment = ko.observable("");
 
-	// generates the key used for the localStorage data.
-	self.getLocalStorageKey = function() {
-		return 'kenmap-' + self.googleCode;
-	};
-
 	// initializes the User Data object. If data exists locally then grab it.
 	self.initialize = function() {
 		var key = self.getLocalStorageKey();
@@ -48,4 +43,10 @@ var UserData = function(googleCode) {
 	};
 
 	self.initialize();
-};
+}
+
+// generates the key used for the localStorage data.
+UserData.prototype.getLocalStorageKey = function() {
+	return 'kenmap-' + this.googleCode;
+}
+

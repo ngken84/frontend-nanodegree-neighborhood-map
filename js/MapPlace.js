@@ -9,7 +9,6 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	//Image URL base on google street view api
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.lat() + ","+ self.placeResult.geometry.location.lng();
 
-
 	// Data from wikipedia
 	self.isWikiLoaded = ko.observable(false);
 	self.isWikiFailed = ko.observable(false);
