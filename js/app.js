@@ -59,13 +59,20 @@ var MapViewModel = function() {
 		self.map.setMapTypeId('map_style');
 	};
 
-
+	self.openInfoWindow = null;
 
 	self.initializeMap();
 
 	// Places Service Object
 	self.placesService = new google.maps.places.PlacesService(self.map);
 
+	self.setUpInfoWindow = function(mapPlace, infoWindow) {
+		if(self.openInfoWindow != null) {
+			self.openInfoWindow.close();
+		}
+		self.selectPlace(mapPlace);
+		self.openInfoWindow = infoWindow;
+	}
 
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
@@ -73,7 +80,7 @@ var MapViewModel = function() {
 			self.placesArray = [];
 			self.placesFilteredArray.removeAll();
 			for(var i = 0, x = results.length; i < x; i++){
-				self.placesArray.push(new MapPlace(results[i], self.map, self.openModal));
+				self.placesArray.push(new MapPlace(results[i], self.map, self.setUpInfoWindow));
 			}
 			self.placesFilteredArray(self.placesArray);
 			self.isEmpty(false);

@@ -5,6 +5,7 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	var self = this;
 
 	self.placeResult = googlePlace;
+	console.log(self.placeResult);
 
 	//Image URL base on google street view api
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.lat() + ","+ self.placeResult.geometry.location.lng();
@@ -13,6 +14,8 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	self.isWikiLoaded = ko.observable(false);
 	self.isWikiFailed = ko.observable(false);
 	self.wikiInformation = ko.observableArray([]);
+
+	self.selectPlace = openModalFunction;
 
 	// Loads data from Wikipedia web service.
 	self.loadWikipediaData = function() {
@@ -143,12 +146,25 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 		});
 	}
 
-	self.createMarker(googleMap, openModalFunction);
+	self.createInfoWindow = function() {
+
+		var contentString = self.getInfoWindowText();
+		var infoWindow = new google.maps.InfoWindow({
+			content: contentString
+		});
+		self.selectPlace(self, infoWindow);
+		infoWindow.open(googleMap, self.marker);
+	}
+
+	self.createMarker(googleMap, self.createInfoWindow);;
 
 	self.userData = new UserData(self.placeResult['place_id']);
 };
 
-
+MapPlace.prototype.getInfoWindowText = function() {
+	return "<div data-toggle='modal' data-target='#myModal'><h4>" + this.placeResult.name + "</h4><p>"
+	+ this.placeResult.vicinity + "</p></div>";
+}
 
 // gets google maps LatLng object for the place
 MapPlace.prototype.getLocation = function() {
