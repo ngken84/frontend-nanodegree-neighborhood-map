@@ -39,7 +39,7 @@ html, body { font-size: 14px; height: 100%; margin: 0; padding: 0; }
 
 @media(min-width: 768px) {
 	html {
-		font-size: 28px;
+		font-size: 14px;
 	}
 
 	.modal-title {
