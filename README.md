@@ -18,7 +18,6 @@ Users can:
 * Change the neighborhood that the map is located by using the search bar at the top of the navigation menu.
 
 HOW TO RUN THE APPLICATION:
-1. Download the zip file from the GIT repository:
-https://github.com/ngken84/frontend-nanodegree-neighborhood-map
+1. Download the zip file from the GIT repository: https://github.com/ngken84/frontend-nanodegree-neighborhood-map
 2. Unzip the file to your local hard drive
 3. Open the index.html or dist/index.html file.
