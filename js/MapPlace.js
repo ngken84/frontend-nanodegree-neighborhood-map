@@ -117,13 +117,13 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	self.createMarker = function(gMap, clickFunction) {
 		var image = {
 			url: self.placeResult.icon,
-			scaledSize: new google.maps.Size(45, 45),
+			scaledSize: new google.maps.Size(40, 40),
 			origin: new google.maps.Point(0, 0),
-			anchor: new google.maps.Point(0, 45)
+			anchor: new google.maps.Point(0, 40)
 		}
 
 		var shape = {
-			coords: [1,1,1,45,45,45,45,1],
+			coords: [1,1,1,40,40,40,40,1],
 			type: 'poly'
 		}
 
