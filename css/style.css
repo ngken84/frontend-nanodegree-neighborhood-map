@@ -17,7 +17,7 @@ html, body { font-size: 14px; height: 100%; margin: 0; padding: 0; }
 
 @media(max-width: 767px) {
 	html {
-		font-size: 16px;
+		font-size: 24px;
 	}
 
 	.modal-title {
@@ -31,11 +31,15 @@ html, body { font-size: 14px; height: 100%; margin: 0; padding: 0; }
 	body {
 		font-size: 1em;
 	}
+
+	.gm-style .gm-style-iw {
+		font-size: 1.0rem;
+	}
 }
 
 @media(min-width: 768px) {
 	html {
-		font-size: 14px;
+		font-size: 28px;
 	}
 
 	.modal-title {
@@ -43,11 +47,15 @@ html, body { font-size: 14px; height: 100%; margin: 0; padding: 0; }
 	}
 
 	h4 {
-		font-size: 1.2em;
+		font-size: 1.2rem;
 	}
 
 	body {
-		font-size: 1.1em;
+		font-size: 1.0em;
+	}
+
+	.gm-style .gm-style-iw {
+		font-size: 1.0rem;
 	}
 
 
