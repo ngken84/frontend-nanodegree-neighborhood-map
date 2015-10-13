@@ -67,9 +67,6 @@ var MapViewModel = function() {
 	self.placesService = new google.maps.places.PlacesService(self.map);
 
 	self.setUpInfoWindow = function(mapPlace, infoWindow) {
-		if(self.openInfoWindow != null) {
-			self.openInfoWindow.close();
-		}
 		self.selectPlace(mapPlace);
 		self.openInfoWindow = infoWindow;
 	}
@@ -122,6 +119,9 @@ var MapViewModel = function() {
 
 	// Updates the current place
 	self.selectPlace = function(mapPlace) {
+		if(self.openInfoWindow != null) {
+			self.openInfoWindow.close();
+		}
 		self.currentPlace(mapPlace);
 		mapPlace.loadWikipediaData();
 		mapPlace.loadNYTimesData();
@@ -136,7 +136,7 @@ var MapViewModel = function() {
 		for(var i = 0, x = self.placesArray.length; i < x; i++) {
 			if(self.placesArray[i] && self.placesArray[i].doesMatchFilter(filter)) {
 				newArray.push(self.placesArray[i]);
-				self.placesArray[i].createMarker(self.map, self.openModal);
+				self.placesArray[i].createMarker(self.map, self.placesArray[i].createInfoWindow);
 			}
 		}
 		self.placesFilteredArray(newArray);
