@@ -89,7 +89,7 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 				self.isNYTimesLoaded(true);
 			});
 		}
-	}
+	};
 
 	//Data from Google Place Details web service
 	self.isGoogleDataLoaded = ko.observable(false);
@@ -99,17 +99,17 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 		if(!data.hasOwnProperty(property)){
 			data[property] = null;
 		}
-	}
+	};
 
 	self.loadGoogleData = function(placeService) {
-		if(!self.isGoogleDataLoaded() && self.placeResult['place_id']) {
-			placeService.getDetails({placeId: self.placeResult['place_id']}, function (data, result) {
+		if(!self.isGoogleDataLoaded() && self.placeResult.place_id) {
+			placeService.getDetails({placeId: self.placeResult.place_id}, function (data, result) {
 				self.checkIfObjectHasProperty(data, 'formatted_phone_number');
 				self.checkIfObjectHasProperty(data, 'website');
 				self.checkIfObjectHasProperty(data, 'reviews');
 				if(data.reviews) {
 					for(var i = 0, x = data.reviews.length; i < x; i++) {
-						self.checkIfObjectHasProperty(data.reviews[i], 'author_url')
+						self.checkIfObjectHasProperty(data.reviews[i], 'author_url');
 					}
 				}
 				self.googleData(data);
@@ -124,12 +124,12 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 			scaledSize: new google.maps.Size(40, 40),
 			origin: new google.maps.Point(0, 0),
 			anchor: new google.maps.Point(0, 40)
-		}
+		};
 
 		var shape = {
 			coords: [1,1,1,40,40,40,40,1],
 			type: 'poly'
-		}
+		};
 
 		self.marker = new google.maps.Marker({
 			position : self.getLocation(),
@@ -146,9 +146,9 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 			self.marker.setAnimation(google.maps.Animation.BOUNCE);
 			setTimeout(function() {
 				self.marker.setAnimation(google.maps.Animation.NONE);
-			}, 2500)
+			}, 2500);
 		});
-	}
+	};
 
 	self.createInfoWindow = function() {
 
@@ -158,37 +158,36 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 		});
 		self.selectPlace(self, infoWindow);
 		infoWindow.open(googleMap, self.marker);
-	}
+	};
 
-	self.createMarker(googleMap, self.createInfoWindow);;
+	self.createMarker(googleMap, self.createInfoWindow);
 
-	self.userData = new UserData(self.placeResult['place_id']);
+	self.userData = new UserData(self.placeResult.place_id);
 };
 
 MapPlace.prototype.getInfoWindowText = function() {
-	return "<div data-toggle='modal' data-target='#myModal'><h4>" + this.placeResult.name + "</h4><p>"
-	+ this.placeResult.vicinity + "</p></div>";
-}
+	return "<div data-toggle='modal' data-target='#myModal'><h4>" + this.placeResult.name + "</h4><p>" + this.placeResult.vicinity + "</p></div>";
+};
 
 // gets google maps LatLng object for the place
 MapPlace.prototype.getLocation = function() {
 	var location = this.placeResult.geometry.location;
 	return new google.maps.LatLng(location.lat(), location.lng());
-}
+};
 
 // Adds bouncing animation to the marker
 MapPlace.prototype.animateMarker = function() {
-	if(this.marker != null) {
+	if(this.marker !== null) {
 		this.marker.setAnimation(google.maps.Animation.BOUNCE);
 	}
-}
+};
 
 // Stops any animation of the marker
 MapPlace.prototype.stopAnimation = function() {
-	if(this.marker != null) {
+	if(this.marker !== null) {
 		this.marker.setAnimation(google.maps.Animation.NONE);
 	}
-}
+};
 
 // removes the marker from the map
 MapPlace.prototype.removeMarker = function() {
@@ -196,17 +195,16 @@ MapPlace.prototype.removeMarker = function() {
 		this.marker.setMap(null);
 		this.marker = null;
 	}
-}
+};
 
 // returns true if the text passed is contained in the map place's name or address
 MapPlace.prototype.doesMatchFilter = function(filterText) {
 	if(filterText) {
-		if(filterText.length == 0) {
+		if(filterText.length === 0) {
 			return true;
 		}
 		var text = filterText.toUpperCase();
-		return (this.placeResult.name.toUpperCase().indexOf(text) != -1)
-			|| (this.placeResult.vicinity.toUpperCase().indexOf(text) != -1);
+		return (this.placeResult.name.toUpperCase().indexOf(text) != -1) || (this.placeResult.vicinity.toUpperCase().indexOf(text) != -1);
 	}
 	return true;
-}
+};
