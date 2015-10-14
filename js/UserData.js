@@ -43,10 +43,9 @@ var UserData = function(googleCode) {
 	};
 
 	self.initialize();
-}
+};
 
 // generates the key used for the localStorage data.
 UserData.prototype.getLocalStorageKey = function() {
 	return 'kenmap-' + this.googleCode;
-}
-
+};
