@@ -60,7 +60,7 @@ var MapOptions = function() {
 			localSettings = JSON.parse(localSettings);
 			self.latitude = localSettings.latitude;
 			self.longitude = localSettings.longitude;
-			var localArray = localSettings["placeTypePrefs"];
+			var localArray = localSettings.placeTypePrefs;
 			for(var i = 0, x = Math.min(localSettings.placeTypePrefs.length, self.placeTypePrefs.length); i < x; i++) {
 				if(self.placeTypePrefs[i].typeName == localSettings.placeTypePrefs[i].typeName) {
 					self.placeTypePrefs[i].isSelected(localSettings.placeTypePrefs[i].isSelected);
@@ -68,7 +68,7 @@ var MapOptions = function() {
 			}
 			self.range(localSettings.range);
 		}
-	}
+	};
 
 	self.initialize();
 };
@@ -76,19 +76,19 @@ var MapOptions = function() {
 // gets Google LatLng object.
 MapOptions.prototype.getLocation = function () {
 	return new google.maps.LatLng(this.latitude, this.longitude);
-}
+};
 
 //Update location of center of the map.
 MapOptions.prototype.setLocation = function(lat, lon) {
 	this.latitude = lat;
 	this.longitude = lon;
-}
+};
 
 //Updates local storage with map preferences
 MapOptions.prototype.updateLocalStorage = function() {
 	var stringOptions = JSON.stringify(ko.toJS(this));
 	localStorage.setItem('kenmap-mapOptions', stringOptions);
-}
+};
 
 MapOptions.prototype.getOptionsObject = function() {
 	var placeTypeArray = [];
@@ -101,5 +101,5 @@ MapOptions.prototype.getOptionsObject = function() {
 		location: this.getLocation(),
 		radius: this.range(),
 		types: placeTypeArray
-	}
-}
+	};
+};
