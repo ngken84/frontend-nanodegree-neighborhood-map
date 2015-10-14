@@ -8,11 +8,11 @@ function initialize() {
 	var toggleLocations = function() {
 		$("#side-panel").slideToggle();
 		$("#side-panel-open-btn").hide();
-	}
+	};
 
 	$("#open-list-btn").click(toggleLocations);
 	$(".navbar-brand").click(toggleLocations);
-};
+}
 
 /*
 The actual map view model.
@@ -69,7 +69,7 @@ var MapViewModel = function() {
 	self.setUpInfoWindow = function(mapPlace, infoWindow) {
 		self.selectPlace(mapPlace);
 		self.openInfoWindow = infoWindow;
-	}
+	};
 
 	self.placeServiceCallback = function (results, status) {
 		if(status == google.maps.places.PlacesServiceStatus.OK) {
@@ -92,20 +92,20 @@ var MapViewModel = function() {
 			self.isError(true);
 			self.isEmpty(false);
 		}
-	}
+	};
 
 	// Removes all markers on the map
 	self.resetMarkers = function() {
 		for(var i = 0, x = self.placesArray.length; i < x; i++) {
 			self.placesArray[i].removeMarker();
 		}
-	}
+	};
 
 	// Opens the modal
 	self.openModal = function(mapPlace) {
 		self.selectPlace(mapPlace);
 		$('#myModal').modal('show');
-	}
+	};
 
 
 	// Does a new search base on the current MapOptions object.
@@ -115,11 +115,11 @@ var MapViewModel = function() {
 		var request = self.mapOptions.getOptionsObject();
 		self.placesService.nearbySearch(request, self.placeServiceCallback);
 		self.mapOptions.updateLocalStorage();
-	}
+	};
 
 	// Updates the current place
 	self.selectPlace = function(mapPlace) {
-		if(self.openInfoWindow != null) {
+		if(self.openInfoWindow !== null) {
 			self.openInfoWindow.close();
 		}
 		self.currentPlace(mapPlace);
@@ -169,7 +169,7 @@ var MapViewModel = function() {
 				self.map.setCenter(results[0].geometry.location);
 				self.mapOptions.setLocation(lat, lon);
 				self.updatePlaces();
-			} else if(results.length == 0) {
+			} else if(results.length === 0) {
 				alert("No locations found matching that address");
 			} else {
 				self.partialAddressList(results);
@@ -188,4 +188,3 @@ var MapViewModel = function() {
 		$('#locationsPickerModal').modal('hide');
 	};
 };
-
