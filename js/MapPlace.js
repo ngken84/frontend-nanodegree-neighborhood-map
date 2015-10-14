@@ -24,6 +24,7 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 				{
 					dataType: 'jsonp',
 					jsonp: 'callback',
+					timeout: 2000,
 					success: function(data, textStatus, jq) {
 						if(textStatus === "success" && data && data.length === 4 && data[1].length > 0) {
 							var array = [];
@@ -42,6 +43,9 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 						} else {
 							self.isWikiFailed(true);
 						}
+					},
+					error: function(XHR, textStatus, errorThrown) {
+						self.isWikiFailed(true);
 					}
 				}).fail(function() {
 				self.isWikiFailed(true);
