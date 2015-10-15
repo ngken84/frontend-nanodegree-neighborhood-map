@@ -4,14 +4,11 @@ Sets up the ViewModel and side panel click listeners.
 */
 function initialize() {
 	ko.applyBindings(new MapViewModel());
+}
 
-	var toggleLocations = function() {
-		$("#side-panel").slideToggle();
-		$("#side-panel-open-btn").hide();
-	};
 
-	$("#open-list-btn").click(toggleLocations);
-	$(".navbar-brand").click(toggleLocations);
+function intializeMapError() {
+	window.location.href = "error.html";
 }
 
 /*
@@ -39,6 +36,11 @@ var MapViewModel = function() {
 	self.isLoading = ko.observable(true);
 	self.isEmpty = ko.observable(false);
 	self.isError = ko.observable(false);
+
+	self.toggleLocations = function() {
+		$("#side-panel").slideToggle();
+		$("#side-panel-open-btn").hide();
+	};
 
 	self.initializeMap = function() {
 		var mapStyle = [{

@@ -19,13 +19,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Ken's Map</a>
+                <a class="navbar-brand" href="#" data-bind="click: toggleLocations">Ken's Map</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a data-target="#optionsModal" data-toggle="modal" href="#">Options</a>
                     </li>
-                    <li><a href="#" id="open-list-btn">Locations</a>
+                    <li><a href="#" data-bind="click: toggleLocations">Locations</a>
                 </ul>
                 <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
@@ -215,7 +215,7 @@
     <script type="text/javascript" src="js/UserData.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPQb5Rww_wcIz5VbhbpX55AARXlc_E7dU&callback=initialize&libraries=places">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPQb5Rww_wcIz5VbhbpX55AARXlc_E7dU&callback=initialize&libraries=places" onerror="intializeMapError()">
     </script>
 </body>
 

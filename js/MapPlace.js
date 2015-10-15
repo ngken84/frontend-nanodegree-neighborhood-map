@@ -5,10 +5,20 @@ var MapPlace = function(googlePlace, googleMap, openModalFunction) {
 	var self = this;
 
 	self.placeResult = googlePlace;
-	console.log(self.placeResult);
 
 	//Image URL base on google street view api
 	self.imageUrl = "http://maps.googleapis.com/maps/api/streetview?size=560x200&location=" + self.placeResult.geometry.location.lat() + ","+ self.placeResult.geometry.location.lng();
+
+	self.loadImageData = function() {
+		var infoWindow = $('#info-img-window');
+		infoWindow.empty();
+		var image = document.createElement('img');
+		image.className = "img-responsive";
+		image.src = self.imageUrl;
+		image.onload = function() {
+			infoWindow.prepend(image);
+		};
+	};
 
 	// Data from wikipedia
 	self.isWikiLoaded = ko.observable(false);
