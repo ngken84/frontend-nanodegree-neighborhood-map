@@ -123,6 +123,7 @@ var MapViewModel = function() {
 			self.openInfoWindow.close();
 		}
 		self.currentPlace(mapPlace);
+		mapPlace.loadImageData();
 		mapPlace.loadWikipediaData();
 		mapPlace.loadNYTimesData();
 		mapPlace.loadGoogleData(self.placesService);

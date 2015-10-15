@@ -85,8 +85,10 @@
                     <img height="20px" width="20px" data-bind="attr: {src: placeResult.icon}">
                     <h4 class="modal-title inline" id="myModalLabel" data-bind="text: placeResult.name">Modal title</h4>
                 </div>
-                <div class="modal-body">
-                    <img class="img-responsive" data-bind="attr: {src: imageUrl}">
+                <div id="info-window-body" class="modal-body">
+                    <div id="info-img-window">
+
+                    </div>
                     <h4>Information</h4>
                     <p class="no-margin" data-bind="visible: googleData() == null, text: placeResult.vicinity"></p>
                     <div data-bind="visible: googleData(), with: googleData">
